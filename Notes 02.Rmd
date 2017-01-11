@@ -1,0 +1,80 @@
+---
+title: "Migration distance and vulnerability to climate change mismatches."
+author: "Kyle Chezik"
+date: "June 20, 2016"
+header-includes:
+- \usepackage{lscape}
+- \usepackage{pdfpages}
+- \usepackage{xcolor}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+output: pdf_document
+---
+In these notes I'm working on describing the relationship between temperature and emergence for pink salmon so we can better predict the day of emergence for different populations. The issue brought up in my earlier notes was that we didn't know when to stop counting days because the model in Beacham and Murray (1990) was not a heat accumulation model but accounted for the effect of the mean temperature during incubation. This is a problem for our study if we are going to use only temperature to predict emergence as the mean temperature calculation assumes knowledge of when to start and stop averaging.
+
+If we gather all the data used by Beacham and Murray (1990), we can plot the cumulative degree-days to emergence onto the number of days to emergence. Having done so, we can see that the number of degree-days is not constant with the number of days to emergence. In fact there is a very clear decline in the number of degree-days required as days to emergence increase. As is discussed by Murray and Beachman there appears to be some degree of development compensation that happens as the mean incubation temperature changes. Basically, if you incbuate at a lower temperature it will take longer to develop but the total number of thermal units will be lower upon emergence than if you incubate at a higher temperature and emerge in a shorter period of time. This explains why their mean temperature model predicts so well, it accounts for this effect. Unfortunatley it's not useful to us.H
+
+\blandscape
+
+```{r, include=F}
+setwd("~/Documents/Simon_Fraser_University/PhD_Research/Projects/Timing-Mismatch_Pink-Salmon")
+library(dplyr)
+dat = readRDS("Data_02_Emergence.rds")
+dat_simp = dat %>% group_by(Treatment,Location,Source) %>% summarize(Degree.Days = mean(Degree.Days), Days.to.Emergence = mean(Days.to.Emergence))
+
+library(nlme)
+mod = gls(model = Degree.Days~Days.to.Emergence, data = dat_simp, weights = varExp(form = ~Days.to.Emergence))
+intercept = coef(mod)[[1]]; slope = coef(mod)[[2]]
+VarExp = mod$modelStruct[[1]][[1]]; sigma = mod$sigma
+
+dat_simp = dat_simp %>% bind_cols(data.frame(upper.pred = intercept + slope*dat_simp$Days.to.Emergence + 1.96 * sqrt(sigma^2 * exp(2*dat_simp$Days.to.Emergence*VarExp)), lower.pred = intercept + slope*dat_simp$Days.to.Emergence - 1.96 * sqrt(sigma^2 * exp(2*dat_simp$Days.to.Emergence*VarExp))))
+```
+
+```{r, echo=F, fig.align='center', fig.height=8.5, fig.width=11}
+library(ggplot2)
+ggplot(dat_simp,aes(NULL,NULL)) + geom_point(aes(Days.to.Emergence,Degree.Days, colour = Treatment, shape = Source)) + geom_smooth(aes(Days.to.Emergence,Degree.Days), method = "lm", se = F) + xlab("Days to Emergence") + ylab("Cumulative Degree-Days") +
+	geom_line(aes(Days.to.Emergence,upper.pred)) +
+	geom_line(aes(Days.to.Emergence,lower.pred)) +
+	scale_shape_manual(values = c(19,23,24,11,4,12,8)) +
+	theme_bw()
+```
+
+\elandscape
+
+\newpage
+
+Ideally what would have occurred is the number of degree-days required for emergence would remain constant regardless of the day of emergence. As we have just seen, this is not the case, which brings me to a thought I've had before. During my masters I spent some time thinking about not only thermal units but the idea of the rate of thermal unit accumulation. This emergence timing work, in concert with [Abby E. Tillotson's]("https://digital.lib.washington.edu/researchworks/bitstream/handle/1773/33172/Tillotson_washington_0250O_14235.pdf?sequence=1") masters work at UW Seattle, makes me wonder if this thermal unit accumulation rate shouldn't be the model for this work and quite honestly a lot of other work. The question is what is the relationship between the rate of thermal accumulation, thermal performance curves and the accuracy of predictions for life history events such as emergence in Salmon?
+
+For now I propose a simpler and more straight to the point method. To calculate emergence timing we simply estimate the point where degree-days and time intersect the line shown in the figure above. This method has the benefit of not only providing a good estimate of emergence but also may account for compensation to different thermal regimes among populations. I have calculated the cumulative degree-days for sites where we have temperature data every day between August-01 and April-30. I have ploted these with the fitted line from the emergence model (see next page).
+
+Building off Jon's comments on the last set of notes, I can't help but believe the timing of spawning strongly dictates the timing of emergence. If they spawn early, the eggs will build up degree-days much faster than if they spawn later. Alternatively, we do have evidence that populations compensate for cooler temperatures (and maybe also spawn timing) and emerge sooner than a strict degree-day model would predict. Either way we are in a tough spot. Maybe spawn timing strongly dicates thermal exposure and therefore emergence timing, or maybe spawn timing is irrelavent and populations that spawn later or in cooler temperatures simply compensate. I'm betting if you spawn earlier you take more degree-days to emerge and if you spawn later you take fewer and the same goes for generally warmer and cooler spawning sites respectively. I'm not sure how to deal with this problem. If we had spawn dates we'd be in like flint. Since we don't I'm not sure how we can measure teh variation in emergence timing if our measurement error is possibly larger than the actual variation.
+
+\newpage
+
+\blandscape
+
+```{r, include = F}
+temp.dat = readRDS("Data_01_Temperature.rds") %>% arrange(GeoLocID, period, Date)
+
+limit = temp.dat %>% group_by(GeoLocID, period) %>% summarize(Include = any(is.na(MeanWaterT))) %>% dplyr::filter(Include==FALSE)
+temp.dat = inner_join(temp.dat, limit, by = c("GeoLocID", "period"))
+
+temp.dat = temp.dat %>% group_by(GeoLocID, period) %>% mutate(cum.DDs = cumsum(pmax(MeanWaterT,0)), cum.days = cumsum(rep(1,length(MeanWaterT))))
+temp.dat$val.unique = as.factor(paste(as.character(temp.dat$GeoLocID),as.character(temp.dat$period), sep = "_"))
+```
+
+```{r, echo=F, fig.align='center', fig.height=8.5, fig.width=11, warning=F}
+library(ggplot2)
+ggplot(temp.dat, aes(cum.days, cum.DDs, group = val.unique)) +
+	geom_line() +
+	scale_y_continuous(limits = c(550, 1400)) +
+	facet_wrap(~period, scale = "free") +
+	geom_abline(slope = -2.9748, intercept = 1389.8150, color = "blue") +
+	xlab("Days to Emergence") + ylab("Cumulative Degree-Days") +
+	theme_bw()
+```
+
+\elandscape
+
+\newpage
+

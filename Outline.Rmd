@@ -1,0 +1,63 @@
+---
+title: "Outline"
+author: "Kyle Chezik"
+date: '2016-10-17'
+output: pdf_document
+---
+
+
+##Introduction
+1. Climate and Phenology
+	+ Climate change is shifting once stable seasonal weather patterns in relatively short order.
+	+ Biota rely on local climatic cues to time their cyclical patterns (phenology).
+	+ Salmon transitioning from fresh water to salt water (smoltification), depend on phytoplankton as their food source upon entering the estuary.
+	+ Reaching the estuary at the same time as the phytoplankton reach peak bloom, increases smolt survival.
+	+ As the climate changes, phytoplankton bloom timing may shift or become more variable , requiring salmon populations to adaptively adjust their arrival timing in the estuary.
+	+ Here we hypothesize that salmon populations with local climates tracking that of the estuary climate will adjust to phytoplankton bloom timing shifts better than those with less correlated climates.
+
+2. Pink Salmon
+	+ Pink salmon have largely been extirpated from the northern reaches of the Fraser basin, but have shown signs of recolonization.
+	+ As populations re-establish themselves in habitats further from the coast, these populations will need to recalibrate their emergence timing to be sure to arrive at the estuary at the best time.
+	+ Climate change may make this re-calibration much more difficult by adding more noise to the long-term climate signal for these distant populations. In other words, climate change may disconnect or obfuscate the relationship between coastal climates and interior climates.
+	+ Although all salmon species show strong temperature dependent emergence timing, Pink salmon tend to immediately travel to the estuary upon emergence.
+	+ Because Pinks do not reside in their natal stream very long, they do most of their adolescent growth in the estuary. As a result, Pink survival may be more dependent on their estuary arrival time than other species.
+	+ Furthermore, this behavior of immediately leaving their natal stream for the estuary eliminates variation in stream residence time allowing for a clearer signal when testing our match-mis-match hypothesis. 
+	
+##Methods
+1. Arrival Time Estimation
+	+ In order to determine a timing mismatch between estuary arrival and phytoplankton bloom we need to know two rather simple things.
+		1. When pink salmon arrived in the estuary in the past.
+		2. When have phytoplankton bloomed.
+	+ Unfortunately, only the date of peak phytoplankton bloom is currently well understood. In order to understand when Pink Salmon arrive we need to develop a relationship between the thermal environment and emergence timing that will help us estimate when each population may begin migrating to the ocean. Combined with an estimate of stream travel time we can then estimate previous arrival dates.
+	+ By aggregating incubation data from previous studies we can develop a relationship between accumulated thermal units and emergence date.
+	+ Having a relationship between temperature and emergence requires that we know two additional things to estimate site emergence times; 1. stream temperature, 2. spawn timing.
+	+ Thanks to DFO and EC we have access to historical stream temperature data throughout the Fraser River basin. Unfortunately, spawn time data only exists after Pink Salmon had largely been extirpated from the northern reaches of the Fraser basin.
+	+ In order to estimate spawn timing in locations where spawning has not occurred for decades we assume that new locations will be inhabited largely as a function of straying. Under this assumption, populations that are more closely connected via stream distance are more likely to be closely related than those further away. Thus using a simple linear model with a correlation matrix that accounts for network connectivity (i.e., Stream Network Model), we can take known spawn dates and estimate in unknown location.
+		1. It may be prudent to include mean Fall temperature in the model as studies have shown a strong relationship between temperature and spawn timing.
+			+ Once we know approximately when each site with temperature data spawned, we simply accumulate thermal units until we reach our approximated emergence date.
+	+ Finally, we determine the time it would take to travel between the spawn site and the estuary to understand approximately when each population would arrive each year.
+	+ Error distributions will be propogated from estimated spawn timing to emergence timing to travel time so mean estimates will show a more representative probability distribution.
+
+##Results
+1. Degree-Day Model
+	+ Here we present the degree day model. We provide context for the studies included. The degree-day model will include the study as a random effect.
+		+ Plot: Possibly plot the location of populations used in the meta-analysis for the degree-day model.
+		+ Plot: Plot of the day-of-emergence as a function of thermal units.
+	
+2. Spawn Timing Model
+	+ Here we present the Stream-Network Spawn Timing model.
+		+ Plot: Map of the spawn timing mean response, kriging estimated to all unknown points,  with actual data plotted as points and labeled by year. Actual spawn dates will be year specific but for visual purposes we might only want to plot the means. 
+	
+3. Estimated Timing Match-Mis-Match
+	+ Here we present evidence for a timing match-mismatch that relates to correlation between local natal stream climate and the estuarine climate.
+	+ Plot a few representative locations where we show the distibution of arrival dates and the peak bloom with error bars.
+	+ Plot the correlation between phytoplankton bloom date and the distance to the estuary as the crow flies. (We could also easily plot against the correlation in temperature between spawn site and the estuary. This might not incorporate all the climatic variables at play. Alternatively we could simply plot a map of timing correlation and let the spatial display tell the story).
+
+##Discussion
+1. Decreased Reliability and Increased Extinction Risk
+	+ Although Pink Salmon have recolonized above Hells Gate in relatively short order, they have not reached the abundances once estimated before the 19## rockslide. Climate Change is likely to add more uncertainty to their recovery as populations struggle to establish the proper phenological diversity to deal with greater annual variability in climate.
+	+ Pink salmon are considered to be quite resilient among the salmonid species suggesting that problems of mismatch may be greater for more sensative, less flexible species.
+	+ Climate conditions have been shown to shift population abundance densities in Sockeye in Bristol Bay Alaska (Hilborn et al. 2003). 
+	
+2. Freshwater Temperature Regimes as Watershed Portfolios
+	+ Freshwater temperature regimes at spawning sites across a basin may result in the response diversity necessary to adapt to a shifting and variable phytoplankton bloom date. If so, in tact and connected basins provide the greatest amount of buffering. Populations that do well in a given year provide strays to other populations which in turn help them do well in subsequent years. 

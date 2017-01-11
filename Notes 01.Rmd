@@ -1,0 +1,250 @@
+---
+title: "Migration distance and vulnerability to climate change mismatches."
+author: "Kyle Chezik"
+date: "June 5, 2016"
+header-includes:
+ - \usepackage{lscape}
+ - \usepackage{pdfpages}
+ - \newcommand{\blandscape}{\begin{landscape}}
+ - \newcommand{\elandscape}{\end{landscape}}
+linkcolor: blue
+output: pdf_document
+---
+
+I'm just walking through my logic and passing on my thoughts so we are all on the same page and can give input as problems arise and/or decisions need to be made.
+
+As I see it, in order for this project to be a success we need, 
+
+1. Locality data of pink salmon populations within the Fraser basin.
+2. Temporally complete temperature data at/near the locations of pink salmon populations.
+3. Phytoplankton bloom data.
+	* Peak bloom.
+	* Duration of bloom?
+
+I've been concerning myself with items 1 & 2. 
+
+### Locality Data
+As for locality data, I've found a document from DFO's "Wild Pacific Salmon Policy Forum 3" held in 2005, where they list the conservation units of all salmon species by population in BC. In this document they do not give lat/long data but rather list rivers and creeks by name. This is a bit problematic as some rivers can be a bit long (i.e., Fraser River population) making it hard to now where the population resides. The document clearly lists odd-year Pink Salmon populations in the Fraser River basin but does not note any even-year populations.
+
+I have figured out that I can use the river GIS layer from BC's freshwater atlas to identify rivers by name and I should be able to determine the centroid lat/long of these rivers/creeks giving us an approximate idea of population locality. I'm open to other ideas for getting locality data as this could be a bit of headache and is likely to not be very precise. Alternatively we could say, "if a pink salmon population resided in a given location, we would expect them to have x correlation with marine phytoplankton bloom", rather than actually identifying actual populations.
+
+###Temperature Data
+I've also busted out the Fraser Temperature Dataset compiled by David Patterson and his posse. If I understand correctly we have phytoplankton bloom data from 1968-2010 right? For this reason I cut down our temperature data to only dates more recent than 01-Jan-1968. I then determined that Pinks spawn between October and November and typically emerge by no later than the end of April so I bound the data within each year by these months.
+
+* General Concern: the Beacham and Murray paper says that the thermal sums model (i.e., Model 1/2) "assumes that hatching/emergence requires a constant number of degree-days above a threshold temperature". Given that my masters work specifically dealt with degree-days I figured I new what they were talking about. Oddly enough their thermal sums model requires the average temperature once adjusted by a thermal minima. This results in not a thermal sum but simply an adjusted average temperature. This leads to a problem. How do we know when to stop counting days if we don't have a thermal sum cut-off to count up to? For instance, if the thermal sum to emergence was 300 degree-days then we'd say day 1 it was 7C and day 2 was 5C and add those temperatures up until we get to 300. We then would ask how many days had passed. Under their model, we know the day of emergence by observing it and then look back to ask what was the average temperature between when spawning occurred and emergence. This seems to me to be circular logic because, inherently in their calculation of average temperature is the number of days to emergence. The big problem here is that we will always have to choose an arbitrary cut-off to stop averaging stream temperatures and hope that the difference between streams/rivers during this time period is different enough on average to see variability in emergence timing. Because of this, it makes perfect sense that their thermal sums models doesn't perform as well as a model that includes the spawning date. By adding the spawning date we reduce the arbitrary time period cut-off on one end. The more I think about this the more the study doesn't make sense to me and seems largely to be a self full-filling prophecy.
+
+* To do this properly we probably need to get the original data compiled in the Beachem and Murray paper and determine what the thermal sum over 0C given the number of days to emergence. We can take there thermal sums and use the mean and sd to provide a thermal sums target and propegate error. Until I can do that, I've moved forward with a simple, albiet wrong, adjusted average temperature approach.
+
+Ordering the resulting data from sites with the most data on top to those with the least on the bottom, I plotted the presence of temperature data over time as seen in the below plot. You will notice that the more recent years have much more data across sites. I'm not sure we need coherence temporally to do the analysis we are thinking of but I'm sure many of these sites will be thrown out because the data is to sparse to include even if we make some assumptions and do some gap filling. I did only include sites with at least 30 days in the fall and 30 days in the spring of a given year (Temp. averages will be affected by this!).
+
+```{r, include=F}
+library(dplyr); library(ggplot2)
+setwd("~/sfuvault/Simon_Fraser_University/PhD_Research/Projects/Data/Subset Data")
+load("05-2 Locality Limited Temperature Data.RData")
+M.Temp = Temp.Loc %>% dplyr::filter(Date>=as.Date("1968-01-01"))
+M.Temp = M.Temp %>% mutate(Month = format(.$Date, "%m"), Year = as.numeric(format(.$Date, "%Y")))
+M.Temp = M.Temp %>% dplyr::filter(as.numeric(Month) %in% c(1:4,10:12))
+M.Temp = M.Temp %>% dplyr::filter(is.na(MeanWaterT)==F)
+reduce = M.Temp %>% group_by(GeoLocID, Year) %>% summarise(
+	spring = length(which(as.numeric(Month)<7)), fall = length(which(as.numeric(Month) > 7))
+) %>% data.frame() %>% dplyr::filter(fall != 0 | spring != 0)
+reduce$Year = as.numeric(reduce$Year)
+
+
+GeoLocID = NULL; Year = NULL; count = 1
+for(i in reduce$GeoLocID){
+	data = reduce[which(reduce$GeoLocID==i),]
+	for(j in as.numeric(data$Year)){
+		if(length(which(data$Year %in% c(j,j+1)==T))==2){
+			if(data[which(data$Year == j),"fall"]>30 & data[which(data$Year == j+1),"spring"]>30){
+				GeoLocID[count] = i; Year[count] = j
+				count = count + 1
+				GeoLocID[count] = i; Year[count] = j +1
+				count = count + 1
+			}
+		}
+	}
+}
+reduce = dplyr::distinct(data.frame(GeoLocID,Year))
+M.Temp =  dplyr::semi_join(M.Temp, reduce, by = c("GeoLocID"="GeoLocID", "Year"="Year"))
+
+#Sort the data by site from least number of daily observations over the time period to the most.
+require(gdata)
+Sort.Order = M.Temp %>% group_by(GeoLocID) %>% summarise(count = n()) %>% arrange(desc(count))
+M.Temp$GeoLocID=reorder.factor(as.character(M.Temp$GeoLocID), new.order = as.character(Sort.Order$GeoLocID))
+```
+
+
+```{r, echo=F, fig.align='center', fig.height=10.5, fig.width=8.5}
+#Data overview.
+ggplot(M.Temp, aes(Date, as.factor(GeoLocID))) +
+	geom_point()
+```
+
+\newpage
+
+\blandscape
+
+To see the data differently, I've also plotted all temperature data by year, where colors represent different sites. Obviously because of the above steps the summer period is missing. You will also note some pretty messy data at some sites. These will need to be removed/investigated. Just eyeballing the data I would say some of the temperature loggers were monitoring air temperature and bobing in and out of the water.
+
+```{r, echo=F, fig.align='center', fig.height=7, fig.width=11}
+M.Temp %>% dplyr::filter(Year < 1984) %>%
+	M.Temp %>% dplyr::filter(Year > 1988, Year < 1995) %>%
+	ggplot(., aes(Date, MeanWaterT, color = GeoLocID)) +
+	geom_point() +
+	facet_wrap(~Year, scales = "free_x") +
+	theme_bw() +
+	theme(legend.position="none") +
+	scale_x_date(date_breaks = "months", date_labels = "%b") +
+	xlab("Month")
+```
+
+\newpage
+
+```{r, echo=F, fig.align='center', fig.height=8.5, fig.width=11}
+M.Temp %>% dplyr::filter(Year > 1983 & Year < 2000) %>%
+	ggplot(., aes(Date, MeanWaterT, color = GeoLocID)) +
+	geom_point() +
+	facet_wrap(~Year, scales = "free_x") +
+	theme_bw() +
+	theme(legend.position="none") +
+	scale_x_date(date_breaks = "months", date_labels = "%b") +
+	xlab("Month")
+```
+
+\newpage
+
+```{r, echo=F, fig.align='center', fig.height=8.5, fig.width=11}
+M.Temp %>% dplyr::filter(Year > 1999) %>%
+	ggplot(., aes(Date, MeanWaterT, color = GeoLocID)) +
+	geom_point() +
+	facet_wrap(~Year, scales = "free_x") +
+	theme_bw() +
+	theme(legend.position="none") +
+	scale_x_date(date_breaks = "months", date_labels = "%b") +
+	xlab("Month")
+```
+
+\elandscape
+
+\newpage
+
+Here I've calculated the emergence time of every site and year within site for odd and even year pink salmon if populations in these locations were to exist. Plotted are the relative frequency of emergence by month for odd (green) and even (blue) return years.
+
+```{r, include=F}
+year = seq(1968,2013,by = 1) #Create a sequence of years to iterate over the span the duration of the phytoplankton data.
+#Iterate over years and create dates that stratle years from the fall to the spring and create a 'period' attribute that can be applied by date to the temperature dataset.
+ref = lapply(year, function(x){
+	Date = seq(as.Date(paste(as.character(x),"-10-01", sep="")), as.Date(paste(as.character(x+1),"-04-30", sep="")), by = "day") #Create dates stratling years.
+	period = rep(x = paste(as.character(x),"P",sep=""),length.out = length(Date)) #Name create a period attribute for the previously created dates.
+	data.frame(Date, period) #return as a dataframe with a list for each year.
+})
+ref = do.call('rbind', ref) #take the list and compile into a single dataframe.
+
+#Join the 'periods' by date with the Temperature dataset.
+periods = M.Temp %>% left_join(.,ref,by = "Date")
+#Go through each site and period within site and calculate the predicted emergence date for odd and even year pink salmon. Return a dataframe.
+results = periods %>% group_by(GeoLocID,period) %>% summarize(
+	year = unique(Year)[1],
+	odd.date = 
+		max(seq(as.Date(paste(year,"-10-01", sep = "")), length.out = round(exp(7.190 - log(mean(MeanWaterT + 2.663)))), by = "day")), #odd year [sd-a: 0.02 | sd-b: 0.13]
+	even.date = 
+		max(seq(as.Date(paste(year,"-10-01", sep = "")),length.out = round(exp(7.339 - log(mean(MeanWaterT + 3.755)))), by = "day")),
+	mean.T = mean(MeanWaterT)) %>% #even year [sd-a: 0.01 | sd-b: 0.09] 
+	data.frame()
+
+#Add a "Date" column that can be used to plot month data without years in ggplot.
+results = results %>% mutate(odd.month_day = as.Date(format(.$odd.date, "2000-%m-%d")), even.month_day = as.Date(format(.$even.date, "2000-%m-%d")))
+```
+
+```{r, echo=F, fig.align='center', fig.height=4.5, fig.width=7.5}
+ggplot(results, aes(NULL)) +
+	geom_density(aes(odd.month_day), color = "green", fill = "green", alpha = 0.1) +
+	geom_density(aes(even.month_day), color = "blue", fill = "blue", alpha = 0.1) +
+	theme_bw() +
+	scale_x_date(date_breaks = "months", date_labels = "%b") +
+	xlab("Month")
+```
+
+\newpage
+
+Once I had calculated emergence timing of all these sites, I moved onto determining these sites distance to the ocean. I did this by outputing the Temperature Sites lat/long to QGIS and approximated the BC Coast with a new vector file I drew. I then ran a distance algorithm that determined each temperature sites shortest distance to the coast. Below you can see the result from this process. One thing you'll notice is that two sites are on Vancouver Island. Must be a mistake somewhere in the data processing before I received the data. Not sure if we need to eliminate these data as there are populations of Pinks on the island and I'd imagine these populations act similar to those in the lower mainland.
+
+```{r, include=F}
+library(rgdal)
+setwd("~/sfuvault/Simon_Fraser_University/PhD_Research/Projects/Data/Original_Data/GIS_Data/Fraser_WS-River")
+BC.lim <- readOGR(dsn="Albers", layer="BC_Limit_Albers") #Call the BC boundary polygon.
+Fraser.WS = readOGR(dsn="Albers", layer="Fraser_WS_Albers") # Call the Fraser basin polygon.
+
+#Read in the polyline files for the different tributaries.
+Tribs = readOGR(dsn="Albers", layer="Fraser_Tribs_Albers")
+Tribs.5 = subset(Tribs, STRMRDR >4)
+Tribs.6 = subset(Tribs, STRMRDR >5)
+Tribs.7 = subset(Tribs, STRMRDR >6)
+Tribs.8 = subset(Tribs, STRMRDR >7)
+Tribs.9 = subset(Tribs, STRMRDR >8)
+
+setwd("~/sfuvault/Simon_Fraser_University/PhD_Research/Projects/Timing-Mismatch_Pink-Salmon/")
+Distance = readOGR(dsn="GIS", layer="Temp_Site_Dist_to_Coast")
+points = readOGR(dsn="GIS", layer="Fraser_Temp_Sites")
+ddpoints = readOGR(dsn = "GIS", layer = "DDmodPops")
+nuSEDS = readOGR(dsn = "GIS", layer = "NuSED_Pops")
+```
+
+```{r, echo=F, fig.align='center', fig.height=4.5, fig.width=7.5}
+par(family = 'serif',bg = NA, fg = NA, las = 1, mar = c(0.25,0.2,0,0), mex = 1, mfrow = c(1,1))
+plot(BC.lim, ylim = c(480000, 1225000),xlim=c(850000, 1595000), las=1, lwd=0.25, col = "gray")
+par(fg = NA) # Remove outline from boarders/points/text etc.
+plot(Fraser.WS, col="grey25", add=TRUE) #Plot the Fraser watershed area.
+plot(Tribs.5, axes=TRUE, add=TRUE, lwd=0.5, col = "#525252") #Plot tribs...
+plot(Tribs.6, axes=TRUE, add=TRUE, lwd=0.5, col = "#737373")
+plot(Tribs.7, axes=TRUE, add=TRUE, lwd=0.5, col = "#737373")
+plot(Tribs.8, axes=TRUE, add=TRUE, lwd=0.5, col = "#969696")
+plot(Tribs.9, axes=TRUE, add=TRUE, lwd=0.5, col = "#969696")
+plot(nuSEDS, axes=TRUE, add=TRUE, col = "#F46D43")
+#plot(ddpoints, axes=TRUE, add=TRUE, col = "#F46D43")
+#plot(points, axes=TRUE, add=TRUE, col = "#F46D43")
+#plot(Distance, axes=TRUE, add=TRUE)
+
+```
+
+\newpage
+
+Finally, we can look at the relationship between distance to ocean and the predicted emergence time of the hypothetical populations at the temperature sites. If we compile everything we see a definite positive relationship between emergence time and distance from the ocean. There is a lot of noise but I hope that can be remedied once the temperature data is made much cleaner and we do the thermal sums calculation correctly.
+
+```{r, include=F}
+dist = read.csv("~/Documents/Simon_Fraser_University/PhD_Research/Projects/Tming-Mismatch_Pink-Salmon/GIS/Temp_Site_to_Coast_Distance.csv", header = T)[,c(1,3)]
+dist$GeoLocID = as.factor(dist$GeoLocID)
+results = results %>% left_join(.,dist,by = "GeoLocID")
+```
+
+```{r, echo=F, fig.align='center', fig.height=4.5, fig.width=7.5, warning=F}
+ggplot(results, aes(NULL,NULL)) +
+	geom_point(aes(odd.month_day, (HubDist/1000)), color="green") +
+	geom_point(aes(even.month_day, (HubDist/1000)), color = "blue") +
+	geom_smooth(aes(even.month_day, (HubDist/1000)), color = "blue", method = "lm", se = F) +
+	geom_smooth(aes(odd.month_day, (HubDist/1000)), color = "green", method = "lm", se = F) +
+	scale_x_date(date_breaks = "months", date_labels = "%b") +
+	theme_bw() +
+	xlab("Month") + ylab("Distance (km)")
+```
+
+\newpage
+
+\blandscape
+
+The data appear to be a bit less noisy if we look at it by year, especially in years with more data. The lines are simply linear regression lines.
+
+```{r, echo=F, fig.align='center', fig.height=7.5, fig.width=11}
+ggplot(results, aes(NULL,NULL)) +
+	geom_point(aes(odd.month_day, HubDist/1000), color="green") +
+	geom_point(aes(even.month_day, HubDist/1000), color = "blue") +
+	geom_smooth(aes(even.month_day, (HubDist/1000)), color = "blue", method = "lm", se = F) +
+	geom_smooth(aes(odd.month_day, (HubDist/1000)), color = "green", method = "lm", se = F) +
+	scale_x_date(date_breaks = "months", date_labels = "%b") +
+	theme_bw() +
+	xlab("Month") + ylab("Distance (km)") +
+	facet_wrap(~period, scales = "free")
+```
+
+\elandscape
