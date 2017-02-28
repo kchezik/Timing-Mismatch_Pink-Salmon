@@ -129,7 +129,7 @@ newdat = read.csv(file = "../../GIS/lsn/sites/sim_sites.csv", header = T)
 write.csv(x = dat, file = "../../GIS/lsn/sites/sites.csv", row.names = F)
 dat = read.csv(file = "../../GIS/lsn/sites/sites.csv", header = T)
 #Save spatial files.
-WGS84 = crs("+init=epsg:4326"); BCAlbers = crs("+init=epsg:3005") 
+WGS84 = crs("+init=epsg:4326"); BCAlbers = crs("+init=epsg:3005")
 #Simulation Data
 newdat.sp = SpatialPointsDataFrame(coords = newdat[,c("long","lat")], data = newdat, proj4string = WGS84)
 newdat.sp = spTransform(x = newdat.sp, CRSobj = BCAlbers)
@@ -137,5 +137,5 @@ writeOGR(newdat.sp, "../../GIS/lsn/sites/", "sim_sites", driver="ESRI Shapefile"
 #Site Data
 dat.sp = SpatialPointsDataFrame(coords = dat[,c("long","lat")], data = dat, proj4string = WGS84)
 dat.sp = spTransform(x = dat.sp, CRSobj = BCAlbers)
-writeOGR(newdat.sp, "../../GIS/lsn/sites/", "sites", driver="ESRI Shapefile", overwrite_layer = T)
+writeOGR(dat.sp, "../../GIS/lsn/sites/", "sites", driver="ESRI Shapefile", overwrite_layer = T)
 

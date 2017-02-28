@@ -74,3 +74,8 @@
 *.Rproj
 
 *.numbers
+.Rproj.user
+
+*.db
+
+*.RData
