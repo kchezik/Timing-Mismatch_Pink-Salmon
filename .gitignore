@@ -79,3 +79,8 @@
 *.db
 
 *.RData
+
+*.png
+
+/Notes/
+/maps/
