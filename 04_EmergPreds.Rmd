@@ -1,0 +1,142 @@
+---
+title: "Estimating Day of Emergence"
+author: "Kyle Chezik"
+date: "6/18/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse);library(lubridate);library(multidplyr)
+#Read in temperature data.
+temp = read_rds("Data_01_Temperature.rds")
+#Read in spawn timing prediction data.
+spawn = read_rds("Data_02_EstSpawnDate.rds")
+#Add a date column with 100 days added to re-adjust spawn date estimates back towards the fall.
+spawn$date = ymd(strptime(paste(as.character(spawn$year), as.character(spawn$spawn)), format="%Y %j")) + 100
+#Add unique identifier to spawn dates for later reference.
+spawn$iid = as.numeric(row.names(spawn))
+#Read in emergence model.
+load("stanMod.RData")
+#Gather all coefficient estimates.
+pstrr = as.data.frame(fit)
+```
+
+#Algorithm Sudo-code.
+
+1. Accumulate degree-days above 0C and accumulate the number of days that have passed concurrently.
+
+2. On each day, use the number of degree-days that have passed to determine the probability that emergence may have occured given the number of days that have passed using the bayesian degree-day model.
+	a. Select days with a likelyhood of emergence greater than 0 and less than 100.
+	b. Plotted by site and year, density distributions of emergence day should represent the variability in emergence timing based on the variability of spawn timing and uncertainty in the DD emergence model. The mean value represents the expected day of emergence and the values around it should demonstrate our uncertainty around that value.
+	
+```{r}
+mung = function(id, dt, tempDF){
+	#Subset data by geolocid.
+	Tdf = tempDF %>% filter(geolocid == id)
+	#Test to make sure the date provided exists in the subset temperature dataset.
+	if(any(dt == Tdf$date)){
+		#Filter by dates greater than and equal to the date provided.
+		Tdf = Tdf %>% filter(date >= dt) %>% arrange(date)
+		#Determine the date when days become non-consecutive.
+		cc = diff(Tdf$date);
+		#Check if the first date that is non-consecutive is not the starting date.
+		if(min(which(cc!=1))>1){
+			#Set the end date either as 365 days after spawn or the first non-consecutive day.
+			if(sum(cc!=1)==0) end = ymd(dt) + 365
+			else if(min(which(cc!=1))>365) end = ymd(dt) + 365
+			else end = Tdf[min(which(cc!=1))-1,"date"][[1]]
+				Tdf = Tdf %>% filter(date <= end)
+			#Test for consecutive days and add DDs and Cum Days.
+			if(all(diff(Tdf$date)==1)){
+				#Add a cumulative DD0 column and a cumulative day column.
+				Tdf = Tdf %>% mutate(DD0 = cumsum(approx),
+														 cc = 1,
+														 CumDay = cumsum(cc)) %>% select(-cc)
+				Tdf #Return dataframe if all prior rules have been met.
+			} else NULL #If the days are not consecutive, return NA.
+		} else NULL #If the day of concern is the last day before dates become non-consecutive, return NULL.
+	} else NULL #If the spawn date is not present in the temperature data, return NULL.
+}
+
+emergProb = function(df, modDF, adjust){
+	if(is.null(df)) NULL #If the data frame is NULL, return NULL.
+	else {
+		#Estimate the probability of emergence on x number of days since spawn, ...
+		# ... given the observed number of degree-days.
+		out = map2(df$DD0, df$CumDay, function(x, y, mod = modDF, center = adjust){
+			mean = mod$b0 + mod$b1 * (x-center) #All mean 'days to emergence estimates'.
+			prob = mean(pnorm(q = y, mean = mean, sd = mod$sigma)) #Probability of emergence.
+			data_frame(DD0=x, CumDay = y, ProbEmerg = round(prob, 3)) #Hold in dataframe with reference values ...
+		}) %>% do.call("rbind",.)
+		#If there are days with an emergence probability greater than 0 then return a df. Otherwise return NULL.
+		if(any(out$ProbEmerg>0)) {
+			out = out %>% filter(ProbEmerg > 0, ProbEmerg<1)
+			out = df %>% select(geolocid, date, DD0, CumDay) %>% left_join(out, ., by = c("DD0", "CumDay")) #Combine.
+			out  # ... return data frame.
+		}
+		else NULL
+	}
+}
+```
+
+```{r}
+#Set up clusters.
+cl = create_cluster(cores = 7)
+spnPar = partition(spawn, cluster = cl)
+
+#Assign Data
+center = 917.4991 #Centering constant to adjust the mean estimate in the DD model.
+
+spnPar %>% 
+#Load necessary libraries across cores.
+	cluster_library("tidyverse") %>% 
+	cluster_library("lubridate") %>% 
+
+#Assign Objects to Nodes
+	cluster_assign_value("temp", temp) %>% 
+	cluster_assign_value("pstrr", pstrr)  %>% 
+	cluster_assign_value("center", center)  %>% 
+
+#Assign Functions to Nodes.
+	cluster_assign_value("mung", mung) %>% 
+	cluster_assign_value("emergProb", emergProb) #Data manipulation.
+
+#Check packages are loaded to nodes on cluster
+cluster_eval(spnPar, search())
+#Check functions are loaded to nodes on cluster.
+cluster_get(spnPar, "mung")[[1]]
+cluster_get(spnPar, "emergProb")[[1]]
+#Check data is on cluster nodes.
+cluster_get(spnPar, "temp")[[1]] %>% head()
+cluster_get(spnPar, "pstrr")[[1]] %>% head()
+
+#Wrapper for organizing the data (i.e., `mung`) and calculating the probability of emergence at each date (i.e., `mergProb`). It steps through each line of spawn
+EProb = spnPar %>% group_by(geolocid, year) %>% do({
+	Year = unique(.$year)
+	rtn = map2_df(.$geolocid, .$date, function(x, y, mod = pstrr, adjust = 917.4991, tp = temp){
+		out = mung(x, y, temp) %>% 
+			emergProb(., mod, adjust)
+		if(is.null(out)){
+			rtn = data_frame(geolocid = x, spawnDate = y, year = Year, emergDate = NA, 
+								 DD0 = NA, CumDay = NA, ProbEmerg = NA)
+		}
+		else {
+			rtn = data_frame(geolocid = out$geolocid, year = Year, spawnDate = y, emergDate = out$date,
+								 DD0 = out$DD0, CumDay = out$CumDay, ProbEmerg = out$ProbEmerg)
+		}
+		rtn
+	}, .id = "iid")
+	rtn
+})
+
+fin = collect(EProb)
+saveRDS(fin, file = "Data_04_EmergProbs.rds")
+```
+
+#Note
+
+Spawn dates were sampled with replacement so some days will be sampled more frequently than others. This will increase the prevalence of values that are more likely to have been the spawn date and downweight emergence days with unlikely spawndates. I'm not sure if this makes perfect sense given that an sampling without replacement would have still led to days of high likelyhood to be more prevalent than days of low liklihood. Could be a big waste of processing time, does it artificially increase our certainty or represent the true level of certainty?
