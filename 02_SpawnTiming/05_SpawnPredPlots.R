@@ -14,16 +14,16 @@ mod = read_rds(path = "./02_SpawnTiming/Model_Results/sim_mod.rds")
 mod$ssn.object@path = "/Users/kylechezik/sfuvault/Simon_Fraser_University/PhD_Research/Projects/Timing-Mismatch_Pink-Salmon/02_SpawnTiming/lsn/sites_sims.ssn" # Change the path of the model from LabPC to local.
 
 #Change to factorized variables and log transform precipitation in the prediction dataset.
-pred_net <- getSSNdata.frame(mod, Name = "BK_1970")
+pred_net <- getSSNdata.frame(mod, Name = "BK_2010")
 names(pred_net)[c(1,5)] <- c("id","year")
 pred_net[,"year"] <- as.factor(pred_net[,"year"])
 pred_net[,"geolocid"] <- factor(pred_net[,"geolocid"])
 pred_net$logF_ppt = log(pred_net$F_ppt); pred_net$logW_ppt = log(pred_net$W_ppt)
 #Place the corrected prediction dataset back into the network.
-mod <- putSSNdata.frame(pred_net, mod, Name = "BK_1970")
+mod <- putSSNdata.frame(pred_net, mod, Name = "BK_2010")
 
 #Retrieve predictions at evenly spaced intervals.
-modP = predict(mod, "BK_1970")
+modP = predict(mod, "preds")
 
 #Plot observed and predicted data on the network.
 par(family = "serif")

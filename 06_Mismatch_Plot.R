@@ -181,6 +181,16 @@ ggplot(mismatch, aes(diff, perc, color = as.factor(region))) + geom_point() +
 ggplot(mismatch, aes(climDiverg, perc, color = as.factor(region))) + geom_point() + 
 		labs(x = "Climate Divergence", y = "Percent Overlap", color = "Climatic Region") + theme_light()
 
+ggplot(mismatch, aes(climDiverg, perc, color = Rdist/1000)) + geom_jitter(height = 0.3, size = 2.25, alpha = 0.7) +
+	scale_color_viridis(option = "plasma") + 
+	labs(x = "Climate Divergence", y = "Percent Overlap", color = "River\nDistance\n(km)") +
+	theme_tufte(ticks = T) + 
+	theme(legend.title.align = 0.5, legend.position = c(0.85,0.75), 
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"))
+ggsave(path = "./drafts/", filename = "mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+
 #Y-axis: values are positive when the Pinks enter the estuary after peak bloom.
 #X-axis: values describe increasingly disimilar climates from the estuary.
 #Color: Percent arrival timing overlap with zooplankton bloom.
@@ -199,24 +209,6 @@ ggplot(mismatch, aes(climDiverg, diff, color = resid, shape = as.factor(region))
 	scale_color_gradient2(name = expression(frac("PhytoDate","Residual")),
 												midpoint=0, low="#67A9CF", mid="#F2F2F2", high="#FF0000") +
 	theme_light()
-
-
-#Heat map of 
-topo.loess = loess(resid~climDiverg * diff, data = mismatch, degree = 1, span = 1)
-x = seq(min(mismatch$climDiverg), max(mismatch$climDiverg), 0.2)
-y = seq(min(mismatch$diff, na.rm = T), max(mismatch$diff, na.rm = T), 0.2)
-interpolated <- predict (topo.loess, expand.grid (climDiverg = x, diff = y))
-
-
-
-par(fg = NA, bg = "white")
-image(x=x, y=y, z=interpolated, 
-			col = RColorBrewer::brewer.pal(n = 11, "RdBu"), 
-			xaxt = "n", yaxt = "n", xlab = "", ylab = "",
-			zlim = c(-20,20))
-par(fg = "black")
-abline(a = 0, b = 0)
-points(x = mismatch$climDiverg, y = mismatch$diff)
 
 
 df = read_rds("Data_04_EmergProbs.rds") %>% ungroup()
@@ -248,18 +240,20 @@ df %>% filter(geolocid %in% id1) %>%
 #Keeper
 df %>% filter(!is.na(perc)) %>% 
 	mutate(EDOY = yday(emergDate+100)-86) %>%
-	#gather(key = lifeH, value = date, emergDate, spawnDate) %>% 
 	ggplot(., aes(y = climDiverg, group = factor(climDiverg))) + 
 	geom_vline(aes(xintercept = yday(dateZ)), color = "grey", alpha = 0.2, size = 2, linetype = 1) + 
 	geom_joy(aes(x = EDOY, fill = diff), 
 					 color = "white", alpha = 0.7,
+					 lwd = 0.5,
 					 scale = 2, show.legend = T, bandwidth = 10) + 
 	theme_tufte() + 
-	#theme(legend.position = "none") + 
 	xlim(-80, 300) +
 	labs(x = "Day of Year", y = "Climate Divergence", fill = "Mismatch \n (days)") + 
 	facet_wrap(~region, scales = "free_y", nrow = 1, ncol = 4) + 
 	scale_fill_viridis() +
-	theme(strip.background = element_blank(),	strip.text.x = element_blank())
+	theme(strip.background = element_blank(),	strip.text.x = element_blank(),
+				legend.title.align = 0.5, 
+				plot.background = element_rect(fill = "transparent",colour = NA),
+				panel.background = element_rect(fill = "transparent", colour = NA))
 
 ggsave(filename = "./drafts/distributions.pdf", device = "pdf", width = 7.5, height = 6.5, units = "in")

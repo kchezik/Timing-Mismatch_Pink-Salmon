@@ -26,8 +26,8 @@ Introduction
 		- For instance, juvenile salmon outmigrating to the ocean, reside periodically in the estuary eating zooplankton before transitioning to piscivory. Optimally, these juveniles will arrive at the estuary at the same time zooplankton populations are in full bloom. Indeed, salmon do exhibit this evolved synchrony with estuarine zooplankton, thereby increasing the liklihood of survival to adulthood (citation).
 - We hypothesize that salmon populations who's climate is more closely linked to that of the estuary are less likely to miss the period of peak zooplankton bloom when emigrating from their natal streams to the ocean.
 
-- Here we use pink salmon spawn and emergence data in British Columbia Canada (Figure \ref{fig:map}) to test whether populations that share similar and correlated climate with the estuary are less likely to miss the peak zooplankton bloom than populations that are more climatically dissimilar.
-- The Fraser River basin is a large, topographically complex and climatically diverse watershed (Figure\ref{fig:map}).
+- Here we use pink salmon spawn and emergence data in British Columbia Canada (Figure$~\ref{fig:map}$) to test whether populations that share similar and correlated climate with the estuary are less likely to miss the peak zooplankton bloom than populations that are more climatically dissimilar.
+- The Fraser River basin is a large, topographically complex and climatically diverse watershed (Figure$~\ref{fig:map}$).
 	- Pink salmon in the Fraser River basin travel upwards of three hundred miles to and from their natal streams but predominately most populations reside in the lower Fraser River. The predominance of populations living in the lower Fraser is in part the result of the 1913 rock slide at Hells Gate. This blockage prevented millions of pink salmon from reaching their spawning grounds, essentially extirpating populations above Hells Gate until a fish ladder was installed in 1945. Since passage was renewed pink salmon have steadily reinhabited the upper Fraser River, though returns above Hells Gate have remained extremely low relative to pre-rock slide estimates.  
 	- Unlike other Pacific salmon, pink salmon exhibit a strict 2 year life span. Spawning in the fall, pink fry emerge and emigrate to the estuary in the spring. Juveniles live and grow in the ocean for two years before returning to their natal stream to parent the next generation.
 	- Pink salmon exhibit such strong two year life history cycles that even and odd year populations are largely distinct.
@@ -91,7 +91,20 @@ Results
 
 ##### Spawn Timing
 
+- Network wide spawn timing has shifted later between 1970 and 2010 by as much as two weeks (Figure$~\ref{fig:map}$).
+	- The largest shifts occured in the interior plateaux (e.g., Nicola and Thompson watersheds) while high elevation, high latitude and coastal areas remained relatively stable.
+	- Combined, elevation, temperature and precipitation accounted for <1\% of the variation observed in the data with the network covariance structure obsorbing ~51\%, random effects of year and site ~27\% and ~22\% by the nugget.
+	- Among the influential predictors, increasing temperatures generally shifted spawn date later while increasing precipitation shifted spawn date earlier.
+	- Model fit as measured by leave one out cross valdiation provided standard error estimates of approximately 10 days.
+	- Certainty in the mean spawn date at prediction sites in 1970 and 2010 was relatively low in part due to the weak relationship between spawn date and climatic and landscape predictors but also due to natural site intra-annual variation.
+	- Notabley, standard errors were lower in regions where spawn data were present (>13 days) and much higher in locations without spawning populations (<33 days).
+	- At prediction locations where water temperature was collected and subsequently emergence timing was estimated, the standard error estimates ranged between 12 and 25 days with certainty declining with distance to observed spawning sites.
+
 ##### Emergence
+
+- Pink salmon poplutions demonstrate significant variability in emergence timing and suggest an interplay between thermal accumulation and time that results in a plastic response in emergence to a popluations environment (Figure$~\ref{fig:emerg}$).
+	- Across studies, populations and thermal regimes, the average number of days to emergence decreases with increasing cumulative degree-days. In other words, when temperatures are low and thermal time accumulates slowly, it takes fewer degree-days to emerge but a more time than if you accumulate thermal time quickly. At warmer temperatures it takes less time to emerge but more degree-days.
+	- In environments where thermal time accumulates quickly (higher temperatures), the range of days to emergence is more variable than cooler environments.
 
 \begin{figure}[H]
 \centering
@@ -101,6 +114,23 @@ Results
 \end{figure}
 
 ##### Match-Mismatch
+
+- The proportion of arriving pink salmon to the estuary that coincide with the zooplankton bloom decreases as the climate of the natal stream becomes less similar to that of the estuary (Figure$~\ref{fig:mis}$).
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{mismatch.pdf}
+\caption{Percent of pink salmon estuary arrival dates that coincide with zooplankton bloom and the similarity of natal stream climates with that of estuary. As the difference in climate between sites and the estuary increases, coincidence between pink salmon arrival dates and zooplankton boom dates decreases. Points are also colored by the river distance between the site and the estuary.}
+\label{fig:mis}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{distributions.pdf}
+\caption{Estuary arrival timing distributions plotted over zooplankton blooms (grey lines) and arranged by an index of climatic difference between the natal stream and the estuary. Each distribution represents a single year for a single population and is colored by how much the most common arrival date missed the zooplankton peak bloom date (yellow = early, purlpe = late). Darker grey in the vertical lines suggest more common peak zooplankton bloom dates between 1960 and 2010.}
+\label{fig:dist}
+\end{figure}
 
 Discussion
 ==========
