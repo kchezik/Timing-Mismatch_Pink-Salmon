@@ -38,7 +38,7 @@ Introduction
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{SpawnShift.png}
+\includegraphics[width=6.5in]{../figures/SpawnShift.png}
 \caption{Mean annual temperature in 1970 (left) and 2010 (center) contrasted with spawn timing (right) in the Fraser River basin. Points indicate observed spawning locations and their color indicates the observed median spawn date. Streams are colored by the estimated change in spawn date given the difference between 1970 and 2010 model estimates. Over this 30 year period spawn timing of adult pink salmon has shifted later as the climate has warmed in the Fraser River basin.}
 \label{fig:map}
 \end{figure}
@@ -118,7 +118,7 @@ Results
 
 \begin{figure}[H]
 \centering
-\includegraphics{Fig2_EmergMod.pdf}
+\includegraphics{../figures/Fig2_EmergMod.pdf}
 \caption{Days to emergence of pink salmon given the accumulation of degree-days. Cumulative degree-days (CDD) are calculated as the sum of mean daily (Day$_{n}$) temperatures above 0$\text{\textdegree}$C, since spawn (S). Points represent observed values extracted from the literature where each point represents a unique study, population and thermal treatment combination. The dotted line describes the modeled mean relationship between CDD and days to emergence and the solid lines above and below the mean describe the variance around the mean with increasing CDD. The grey color gradient represents the probability tails of the log-normal distribution describing the probability of emergence estimated by the model whereas the white space between represents the 95\% credibility intervals.}
 \label{fig:emerg}
 \end{figure}
@@ -142,7 +142,7 @@ Results
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{distributions.pdf}
+\includegraphics[width=6.5in]{../figures/distributions.pdf}
 \caption{Estuary arrival timing probability distributions plotted over zooplankton blooms (grey lines) and arranged by an index of climatic difference between the natal stream and the estuary. Each distribution represents a single year for a single population and is colored by how much the most common arrival date missed the zooplankton peak bloom date (yellow = early, purlpe = late). The vertical grey lines represent the combined distribution of zooplankton bloom dates where darker grey suggest more common peak zooplankton bloom dates between 1970 and 2010.}
 \label{fig:dist}
 \end{figure}
@@ -180,14 +180,14 @@ Discussion
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{sequence.pdf}
+\includegraphics[width=6.5in]{../figures/sequence.pdf}
 \caption{Estimated day of year of zooplankton bloom (estuary, circle) and estuary arrival for populations below Hells Gate (lower, square) and above Hells Gate (interior, triangle). Interior and lower Fraser points estimate the most common (i.e., mode) day of year and lines describe the inter-quartile range of the distribution of arrival timing. Estuary points describe the mean and the vertical lines represent three times the standard deviation (i.e., 99.6\% of variation). Points and lines are colored by how much their climate diverges on average from that of the estuary in the given year.}
 \label{fig:seq}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{ChangeOverlap.png}
+\includegraphics[width=6.5in]{../figures/ChangeOverlap.png}
 \caption{($\bold{left}$) Predicted probability of overlap between estuary arrival and zooplankton bloom (lines) given estimated overlap in arrival timing distributions at varied sites (open circles) within the Fraser River watershed. The center of the open circles is the location of temperature data collection used to estimate emergence and hences estuary arrival timing. Points within the open ring represent zooplankton bloom overlap estimates in different years while the color of the open cirle describes the most recent year. ($\bold{right}$)  The estimated change in the probabilty of overlap between 1970 and 2010 with coincident changes in climate similarity between the Fraser Basin estuary and the network.}
 \label{fig:OverMap}
 \end{figure}

@@ -1,4 +1,7 @@
 all: outline
 
 outline:
-	pandoc -H style.sty -V fontsize=11pt -V geometry:margin=1in outline.md -o outline.pdf
+	pandoc -H style.sty -V fontsize=11pt -V geometry:margin=1in ../outline/outline.md -o ../outline/outline.pdf
+
+ms:
+	pandoc -H style.sty -V fontsize=11pt -V geometry:margin=1in ms.md -o ms.pdf
