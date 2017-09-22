@@ -1,6 +1,6 @@
 % Pink Salmon: Match-Mismatch Outline
 % K. A. Chezik; S. M. Wilson; J. W. Moore
-% July 12, 2017
+% August 04, 2017
 
 \linenumbers
 
@@ -38,7 +38,7 @@ Introduction
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{BK2010.png}
+\includegraphics[width=6.5in]{SpawnShift.png}
 \caption{Mean annual temperature in 1970 (left) and 2010 (center) contrasted with spawn timing (right) in the Fraser River basin. Points indicate observed spawning locations and their color indicates the observed median spawn date. Streams are colored by the estimated change in spawn date given the difference between 1970 and 2010 model estimates. Over this 30 year period spawn timing of adult pink salmon has shifted later as the climate has warmed in the Fraser River basin.}
 \label{fig:map}
 \end{figure}
@@ -83,10 +83,18 @@ Methods
 
 ##### Zooplankton Bloom, Match Mismatch and Climate
 - The ultimate food source of juvenile salmon in the estuary are zooplankton thus we need to know when the zooplankton bloom occurs in order to observe match-mismatch dynamics. Allen and Wolfe (2013) developed a model for estimating phytoplankton bloom which are consumed by zooplankton and whose bloom determines that of zooplankton. To estimate the timing of zooplankton bloom from observed phytoplankton bloom estimates we simply applied a constant lag period in which zooplankton was presumed to peak two weeks after phytoplankton bloom.
-- To quantify match mismatch, we asked what proportion of estuary arrival date estimates coincided with the eight day window of zooplankton bloom for each population in each year. Those populations and years with greater overlap suggest better opportunities for growth and survival, while those populations with smaller overlap suggest the opposite.
+	- Allen and Wolfe (2013) provide standard deviation estimates around their phytoplankton bloom timing. To capture 99.6\% of the variability around the mean estimate we measured uncertainty as three times the standard deviation on either side of the mean resulting in a 30 day zooplankton bloom window each spring.
+- To quantify match mismatch, we asked what proportion of estuary arrival date estimates coincide with the 30 day window of zooplankton bloom for each population in each year. Those populations and years with greater overlap suggest better opportunities for growth and survival, while those populations with smaller overlap suggest the opposite.
 - Ultimately, we wish to test whether correlative climates between the estuary and a populations natal spawn site impacts the likelihood of match mismatch dynamics. To do this we calculated a relative measure of climatic similarity in each year between each site and the estuary.
 	- Our index of climate similarity consists of calculating the absolute difference in temperature (mean, min and max) and precipitation (mean) between the estuary and each site, in each month of each year. We then standardize these four climatic measures of similarity between zero and one for each spawn year and sum those standardized differences within each site and year. A spawn year spans between July-01 and June-30 of the subsequent year thereby capturing direct impacts of climate on developing pink salmon embryos. The smaller the index value the greater the similarity between the estuary and the spawn site.
 	- Using these index values, we can evaluate the relationship between climate match-mismatch and estuary arrival timing match-mismatch.
+
+##### Predicting the Probability of Zooplankton Bloom Overlap
+- Understanding how tracking the climate of the estuary changes the likelihood of arriving during the zooplankton bloom, allows us to model how this relationship changes accross the network and determine if areas have been improving or deteriorating.
+- Here we used a stream network model to estimate how the probability of match-mismatch changes along the network. By logit transforming the probability of arriving in the estuary at the time of the zooplankton bloom, we were able to use a generalized linear model very similar to our spawn timing model where ...
+	- Describe model....
+- By using a stream network model we can capture the stream relationship of varied environmental variables that are conveyed to the network from the local climate. Furthermore, we can capture population driven correlations across the network by assuming that populations nearby on the network are more likely to respond similarily than populations further away.
+- Once we have the model we can predict along the network at different time periods and compare changes by simply differencing the predictions. In this way we calculate potential climate driven changes between 1970 and 2010 in climate similarity index and phenological match-mismatch with zooplankton bloom.
 
 Results
 =======
@@ -94,80 +102,93 @@ Results
 ##### Spawn Timing
 
 - Network wide spawn timing has shifted later between 1970 and 2010 by as much as two weeks (Figure$~\ref{fig:map}$).
-	- The largest shifts occurred in the interior plateaus (e.g., Nicola and Thompson watersheds) while high elevation, high latitude and coastal areas remained relatively stable.
+	- The largest shifts occurred in the interior plateaus (e.g., Nicola and Thompson watersheds) while high elevation, high latitude and coastal areas remained relatively stable between these time periods.
 	- Combined, elevation, temperature and precipitation accounted for <1\% of the variation observed in the data with the network covariance structure absorbing ~51\%, random effects of year and site ~27\% and ~22\% by the nugget.
 	- Among the influential predictors, increasing temperatures generally shifted spawn date later while increasing precipitation shifted spawn date earlier.
 	- Model fit as measured by leave one out cross validation provided standard error estimates of approximately 10 days.
-	- Certainty in the mean spawn date at prediction sites in 1970 and 2010 was relatively low in part due to the weak relationship between spawn date and climatic and landscape predictors but also due to natural site intra-annual variation.
-	- Notably, standard errors were lower in regions where spawn data were present (>13 days) and much higher in locations without spawning populations (<33 days).
+	- Certainty in the mean spawn date at prediction sites in 1970 and 2010 was relatively low in part due to the weak relationship between spawn date and climatic and landscape predictors but also due to natural intra-annual variation at the site.
+		- Notably, standard errors were lower in regions where spawn data were present (>12 days) and much higher in locations without spawning populations (<33 days).
 	- At prediction locations where water temperature was collected and subsequently emergence timing was estimated, the standard error estimates ranged between 12 and 25 days with certainty declining with distance to observed spawning sites.
 
 ##### Emergence
 
-- Pink salmon populations demonstrate significant variability in emergence timing and suggest an interplay between thermal accumulation and time that results in a plastic response in emergence to a populations environment (Figure$~\ref{fig:emerg}$).
-	- Across studies, populations and thermal regimes, the average number of days to emergence decreases with increasing cumulative degree-days. In other words, when temperatures are low and thermal time accumulates slowly, it takes fewer degree-days to emerge but a more time than if you accumulate thermal time quickly. At warmer temperatures it takes less time to emerge but more degree-days.
-	- In environments where thermal time accumulates quickly (higher temperatures), the range of days to emergence is more variable than cooler environments.
+- Pink salmon populations demonstrate significant variability in emergence timing and suggest an interplay between thermal accumulation and the accumulation of time that results in a plastic response in emergence to a populations environment (Figure$~\ref{fig:emerg}$).
+	- Across studies, populations and thermal regimes, the average number of days to emergence decreased with increasing cumulative degree-days. In other words, when temperatures are low and thermal time accumulates slowly, it takes fewer degree-days to emerge but more time than if thermal time is accumulating quickly. At warmer temperatures it takes less time to emerge but more degree-days.
+	- In environments where thermal time accumulates quickly (higher temperatures), the range of days to emergence is approximately twice as variable as cooler environments.
 
 \begin{figure}[H]
 \centering
 \includegraphics{Fig2_EmergMod.pdf}
-\caption{Days to emergence of pink salmon given the accumulation of degree-days. Cumulative degree-days (CDD) are calculated as the sum of mean daily (Day[n]) temperatures above 0$\text{\textdegree}$C, since spawn (S). Points represent observed values extracted from the literature where each point represents a unique study, population and thermal treatment combination. The dotted line describes the modeled mean relationship between CDD and days to emergence and the solid lines above and below the mean describe the variance around the mean with increasing CDD. The grey color gradient represents the probability tails of the log-normal distribution describing the probability of emergence estimated by the model whereas the white space between represents the 95\% credibility intervals.}
+\caption{Days to emergence of pink salmon given the accumulation of degree-days. Cumulative degree-days (CDD) are calculated as the sum of mean daily (Day$_{n}$) temperatures above 0$\text{\textdegree}$C, since spawn (S). Points represent observed values extracted from the literature where each point represents a unique study, population and thermal treatment combination. The dotted line describes the modeled mean relationship between CDD and days to emergence and the solid lines above and below the mean describe the variance around the mean with increasing CDD. The grey color gradient represents the probability tails of the log-normal distribution describing the probability of emergence estimated by the model whereas the white space between represents the 95\% credibility intervals.}
 \label{fig:emerg}
 \end{figure}
 
 ##### Match-Mismatch
 
-- As the climate along the Fraser River network diverges from that of the estuary, the likelihood of juvenile pink salmon arriving at the same time as the zooplankton bloom decreases (Figure$~\ref{fig:mis}$).
-- Although the likelihood of mismatch decreases when tracking the estuarine climate, the possibility of mismatch remains. Among sites that typically track the estuary climate well, arrival timing overlap with the zooplankton bloom ranged between 1 and 17\%. Although the lower bound remains the same among climatically dissimilar environments, the upper bound decreases by 10\%.
+- As the climate along the Fraser River network diverges from that of the estuary, the probability of juvenile pink salmon arriving at the same time as the zooplankton bloom decreases (Figure$~\ref{fig:mis}$).
+- Although the probability of mismatch decreases when tracking the estuarine climate, the possibility of mismatch remains. Among sites that typically track the estuary climate well, arrival timing overlap with the zooplankton bloom ranged between 5 and 58\%. Although the lower bound remains similar among climatically dissimilar environments, the upper bound decreases by 48\% to just 28\% probability of arriving on-time in the estuary.
 
-- Arrival timing distributions are relatively defined among populations tracking the estuarine climate, typically falling within or just after the range of zooplankton bloom dates. As the climate diverges from that of the estuary the distributions become predominately early and arrival dates become more widely spread and are equally likely.
+- Arrival timing distributions are relatively defined among populations tracking the estuarine climate, typically falling within or just after the range of zooplankton bloom dates. As the climate diverges from that of the estuary the probability of arriving early increases but the probability of arrival is more evenly distributed over a wider range of dates.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{mismatch.pdf}
-\caption{Percent of pink salmon estuary arrival date distribution that coincides with zooplankton bloom given the similarity of natal stream climates with that of the estuary. As the difference in climate between sites and the estuary increases, coincidence between pink salmon arrival dates and zooplankton bloom dates decreases. Points are colored by the river distance between the site and the estuary and jittered vertically to reduce overlap.}
+\caption{Percent chance of pink salmon estuary arrival coinciding with the zooplankton bloom given the similarity of the natal stream climates with that of the estuary. As the difference in climate between sites and the estuary increases, coincidence between pink salmon arrival dates and zooplankton bloom dates decreases. Points are colored by the river distance between the site and the estuary and jittered vertically to reduce overlap.}
 \label{fig:mis}
 \end{figure}
 
-- Pink salmon in the lower Fraser River basin arrive in the estuary typically after those coming from further in the interior but while interior populations have tracked the zooplankton bloom consistently over time, this region is becoming increasingly erratic (Figure$~\ref{fig:seq}$).
-- Since the mid 1980's the distribution of estuary arrival dates has become less certain among the lower and interior populations, increasing the odds that a portion of the arriving salmon with coincide with the zooplankton bloom.
+- Pink salmon in the lower Fraser River basin arrive in the estuary typically after those coming from further in the interior but while interior populations have tracked the zooplankton bloom consistently over time, this region is becoming increasingly erratic. (Figure$~\ref{fig:seq}$).
+- Since the mid 1980's the distribution of estuary arrival dates has become less certain among the lower and interior populations, increasing the odds that a portion of the arriving salmon will coincide with the zooplankton bloom but decreasing the chance that the majority of the run will arrive on-time.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{distributions.pdf}
-\caption{Estuary arrival timing distributions plotted over zooplankton blooms (grey lines) and arranged by an index of climatic difference between the natal stream and the estuary. Each distribution represents a single year for a single population and is colored by how much the most common arrival date missed the zooplankton peak bloom date (yellow = early, purlpe = late). Darker grey in the vertical lines suggest more common peak zooplankton bloom dates between 1960 and 2010.}
+\caption{Estuary arrival timing probability distributions plotted over zooplankton blooms (grey lines) and arranged by an index of climatic difference between the natal stream and the estuary. Each distribution represents a single year for a single population and is colored by how much the most common arrival date missed the zooplankton peak bloom date (yellow = early, purlpe = late). The vertical grey lines represent the combined distribution of zooplankton bloom dates where darker grey suggest more common peak zooplankton bloom dates between 1970 and 2010.}
 \label{fig:dist}
 \end{figure}
 
-- The climate along the Fraser River network is becoming more similar to the estuary and showing increased overlap between arrival timing and zooplankton bloom (Figure$~\ref{fig:OverMap}). Currently, the lower Fraser shows the most overlap between arrival timing and zooplankton bloom but the interior populations are not far behind and appear to be catching up when comparing modeled overlap between 1970 and 2010 as a function of changing climate similarity index.
+- Currently, the lower Fraser shows the most overlap between arrival timing and zooplankton bloom but the interior populations are not far behind and appear to be catching up when comparing modeled overlap between 1970 and 2010 as a function of changing climate similarity index (Figure$~\ref{fig:OverMap}$a).
+- The climate is increasingly diverging from the estuary along the main-stem of the Fraser River, subsequently reducing the probability of overlapping with the zooplankton bloom. More generally, the climate is becoming more similar to the estuary throughout much of the basin and most notably in the lower-interior (Figure$~\ref{fig:OverMap}$b).
 
 
 Discussion
 ==========
-- Fraser River pink salmon emerging in the lower reaches of the watershed are more likely to arrive in the estuary at the same time as the zooplankton population is reaching peak bloom compared with populations arriving from further afield. This relationship coincides with the strength of similarity between the climate of a populations natal stream and that of the estuary.
-	-Likely a result of dominate wind patterns. Wind drives upwheling (Colins et al. 2009) and those same winds penetrate lower basin which are then funneled into the Thompson River watershed northeast of the eastuary.
+- Our results suggest that the probability of arriving in the estuary during peak zooplankton bloom is tied to how well the climate of the natal stream tracks the climate of the estuary. For those populations living in the lower Fraser River basin, below Hells Gate, there is an increased likelihood of a greater proporation of migrating jeuveniles arriving in the estuary during peak zooplankton bloom than those populations emerging further upstream in the Thompson River watershed. 
+	- Wind patterns in coincidence with shifting seasonal light intensity have been shown to strongly predict phytoplankton bloom timing in the Straight of Georgia near the Fraser River Estuary (Colins et al. 2009). These wind patterns may drive the correlation function over space that links salmon natal stream climate to that of the estuary.
 
--Implications for pink salmon match-mismatch as climate change progresses.
-	-The potential for winners and losers.
-	-Shifting populations over space with climate change and colonization potential.
+- As temperatures warm throughout the Fraser River basin, our river network model suggests spawn timing has shifted later (Figure$~\ref{fig:map}$). 
+	- Spawn timing is believed to be a rather plastic and possibly genetically responsive life history trait that will likely respond strongly to climate (Crozier & Hutchings 2014).
+	- Warming stream temperatures have been associated with later spawning date in Sockeye (Lisi et al. 2013) and pink salmon spawn timing is known to be sensative to temperaure (Fugushima & Smoker 1997).
+	- We found that for every 1$\text{\textdegree}$C increase in fall temperature, we can expect on average a 4.8 day shift later in spawn timing. Countering the thermally driven shifts later in the season is the affect of increased precipitation. While generally increased fall precipitation advanced spawning date, the affect attenuates dramatically with increasing rainfall. An increase from 2 to 7 millimeters of rainfall in September and October would consitute a 2.5 day shift earlier but to double this shift an additional 13 millimeters would be required. Thus if a site was already averaging 50 millimeters of rain and received an increase of 10 millimeters the affect on spawn timing would be less than 0.5 days.
+	- Although the observed spawn data does not extend to extremely cold locations in the watershed, we may expect an attenuation of the impact of temperature at lower temperatures. For instance, although the central and northwest portion of the Fraser river basin has seen much of the most dramatic changes in temperature, the model predicts relatively modest changes in spawn timing.
+	- Biologically we would only expect changes in temperature to be affecting spawn timing  at the upper thermal limits. Delaying spawn while summer temperatures cool makes sense in hot locations but not so much in cooler locations. This may explain why the Thompson region, in the southeast, has seen such dramatic changes in spawn date while other locations that have seen the same or more increases in tempearture haven't shifted as much.
+	- Shifts in spawn timing may play a role in ensuring offspring do not develop to quickly and emerge to soon in the late summer and spring. By waiting for cooler temperatures, the embyos will collect less thermal time in the fall, requiring more thermal time to accumulate in the spring. This behaviour, in concert with developmental plasticity (Figure$~\ref{fig:emerg}$), likely plays a significant role in mitigating inter-annual variability in climate and ensuring proper emergence timing in the spring.
 
--Plasticity vs. genetics.
+- The shape of estuary arrival timing probability distributions change with climate divergence (Figure$~\ref{fig:dist}$). As the climate of the stream becomes less similar to that of the estuary, the distribution increasingly spreads over a wider range of dates and has a less defined peak.
+	- Changes in the shape of the probability distribution may reflect modeled and biological underpinnings.
+		- The model assumes the variance around the predicted spawn dates and the variance around the trend line in our emergence model to be normal.
 
--Managing at the watershed level.
+- Implications for pink salmon match-mismatch as climate change progresses.
+	- The potential for winners and losers.
+	- Shifting populations over space with climate change and colonization potential.
+
+- Plasticity vs. genetics.
+
+- Managing at the watershed level.
 
 - A natural question is what are the subsequent outcomes for years when we predicted mismatch vs. match? Two years later do we see returns that mimic this hit or miss relationship? 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{sequence.pdf}
-\caption{}
+\caption{Estimated day of year of zooplankton bloom (estuary, circle) and estuary arrival for populations below Hells Gate (lower, square) and above Hells Gate (interior, triangle). Interior and lower Fraser points estimate the most common (i.e., mode) day of year and lines describe the inter-quartile range of the distribution of arrival timing. Estuary points describe the mean and the vertical lines represent three times the standard deviation (i.e., 99.6\% of variation). Points and lines are colored by how much their climate diverges on average from that of the estuary in the given year.}
 \label{fig:seq}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{ChangeOverlap.png}
-\caption{Predicted overlap in estuary arrival timing and zooplankton bloom (*left*) and estimated change in overlap between 1970 and 2010 with coincident changes in climate similarity between the Fraser Basin estuary and the network (right).}
+\caption{($\bold{left}$) Predicted probability of overlap between estuary arrival and zooplankton bloom (lines) given estimated overlap in arrival timing distributions at varied sites (open circles) within the Fraser River watershed. The center of the open circles is the location of temperature data collection used to estimate emergence and hences estuary arrival timing. Points within the open ring represent zooplankton bloom overlap estimates in different years while the color of the open cirle describes the most recent year. ($\bold{right}$)  The estimated change in the probabilty of overlap between 1970 and 2010 with coincident changes in climate similarity between the Fraser Basin estuary and the network.}
 \label{fig:OverMap}
 \end{figure}
 
