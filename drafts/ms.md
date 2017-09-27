@@ -6,16 +6,13 @@
 
 #Abstract
 
-#Introduction
-
 ##Message Box
 There is growing evidence that climate change is driving phenological shifts and disrupting species interactions. However, climate is changing unevenly across space and many animals migrate across great distances and environments. Spatial structuring of populations may influence their vulnerability to phenological mismatch. Here we demonstrate spatial structuring of phenological asynchrony in a migratory fish.
 
-Climate change is disrupting the phenological synchrony of ecological interactions (refs). In response to rising global temperatures many species are shifting their habitat range towards the poles and the timing of many life history events towards cooler seasonal temperatures \citep{Parmesan:2003, Root:2003}. For instance, of the 677 species assessed by Parmesan and Yohe in their 2003 meta-analysis, 62\% exhibited advanced spring life history events while only 9\% suggested spring delays. Despite generally coherent directional shifts in phenology among species the magnitude of change has been variable \citep{Thackeray:2010,Thackeray:2016}. Incoherent magnitude shifts in phenology increases the opportunity for mismatch between inter-dependent species \citep{Cushing:1990,Durant:2005}.
+#Introduction
 
-Climate change is occurring unevenly over space \citep{Bindoff:2013}. Environments that closely track each-other provide the opportunity for biota to synchronize \citep{Moran:1953} but as distance increases so does the likelihood of dissimilar climate shifts. Uneven changes in climate and non-linear responses by species can disrupt the established patterns of synchrony \citep{Durant:2007}. As a result the risk of phenological asynchrony between inter-dependent species grows with increasing distance.
+Climate change is disrupting the phenological synchrony of ecological interactions (refs). In response to rising global temperatures many species are shifting their habitat range towards the poles and the timing of many life history events towards cooler seasonal temperatures [@Parmesan:2003; @Root:2003]. For instance, of the 677 species assessed by @Parmesan:2003, 62\% exhibited advanced spring life history events while only 9\% suggested spring delays. Despite generally coherent directional shifts in phenology among species the magnitude of change has been variable [@Thackeray:2010; @Thackeray:2016]. Incoherent magnitude shifts in phenology increases the opportunity for mismatch between inter-dependent species [@Cushing:1990; @Durant:2005].
 
-Migrating species may be particularly vulnerable to climate mismatches. Divergent climatic change along the migratory route could disrupt synchrony with important habitat and resources. If timing of migration is controlled by the environment, then dive
+Climate change is occurring unevenly over space [@Bindoff:2013], leaving migratory species particularly vulnerable to mismatch. Environments that closely track each-other provide the opportunity for biota to synchronize, allowing species to take advantage of resources over a greater spatio-temporal range [@Moran:1953; @Royama:2012]. As distance increases so does the likelihood of dissimilar climate shifts, possibly disrupting synchrony with important habitat and resources along migratory routes [@Durant:2007]. If local shifts in climate diverge from those along the migratory route or the important resources along the route respond to the changing climate differently, species responding to local cues or adatpive traits to initiate migration may find important resources no longer available upon arrival [e.g., @Crozier:2008].
 
-
-If the timing of migration is locally controlled, then divergent climatic change across the migration route could disrupt synchrony \citep{Durant:2007}. If the timing of migration is an adapted trait then keeping pace with the shifting climate and other more plastic species may be 
+#References
