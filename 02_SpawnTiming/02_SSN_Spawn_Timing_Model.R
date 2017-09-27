@@ -18,7 +18,6 @@ pred_net[,"geolocid"] <- factor(pred_net[,"geolocid"])
 pred_net$logF_ppt = log(pred_net$F_ppt); pred_net$logW_ppt = log(pred_net$W_ppt)
 network <- putSSNdata.frame(pred_net, network, Name = "preds")
 
-
 #Plot the known pink salmon spawning locations.
 plot(network, "peak", lwdLineCol = "afvArea", lwdLineEx = 10, lineCol = "black", pch = 19, xlab = "x-coordinate (m)", ylab = "y-coordinate (m)", asp   =   1)
 
