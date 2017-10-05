@@ -6,7 +6,8 @@
 
 #Abstract
 
-##Message Box
+*Message Box*
+
 There is growing evidence that climate change is driving phenological shifts and disrupting species interactions. However, climate is changing unevenly across space and many animals migrate across great distances and environments. Spatial structuring of populations may influence their vulnerability to phenological mismatch. Here we demonstrate spatial structuring of phenological asynchrony in a migratory fish.
 
 #Introduction
@@ -22,10 +23,9 @@ Increasing sea surface temperatures are shifting the timing [@Richardson:2008] a
 Here we examine whether there is spatial structuring of phenological asynchrony in a migratory fish of economic, ecological and cultural importance. Locally adapted salmon populations spawn throughout vast river networks that integrate diverse climate variability [@Chezik:2017], however each aims to synchronize with the plankton bloom of a common estuary. By leveraging shared information across a river network and propogating cumulative impacts and uncertainty from the date of spawn through to estuary arrival, we estimate match-mismatch potential for 64 sites within the largest salmon watershed in Canada. Here we test whether populations whose climates are well correlated with the estuary demonstrate increased synchrony with zooplankton bloom. We also examine whether there are changing patterns of synchrony over time as climate change impacts are realized differently over space.
 
 #Materials and methods
+*Study site*
 
-The Fraser River watershed drains approximately 217,000 km^2^ of diverse terrain and climate (Fig.$~\ref{fig:map}$). Originating in the western Cordillera of North America, the basin drains snow laiden Canadian Rockies and Coastal Mountains. Converging and running down the dry central plateau of British Columbia, the river eventually crashes through the coastal mountains by way of Hells Gate in the Fraser Canyon and spills into the Georgia Straight of the Pacific Ocean. Home to five species of pacific salmon, the Fraser River basin sustains one of the largest migrations of sockeye [@Eliason:2011] and once large stocks of pink salmon [@Neave:1966]. We focus on the Fraser river basin because the basin is being impacted by climate change [e.g., @Kang:2014; @Kang:2016; @Dery:2012; Schnorbus:2010; Shrestha:2012; Healey:2011], the basin contains pink salmon which exhibit relatively simple and fixed life histories [@Neave:1966], and the basin has been well monitoried such that spawn timing (i.e., nuSEDS), stream temperature, climate monitoring [@Wang:2012], fry emergence [e.g., Beacham:1988] and plankton bloom [@Allen:2013] data are all available. Using these data we estimate when hypothetical populations throughout the basin would be expected to arrive in the estuary, the probability of overlap with zooplankton blooms and the degree to which overlap is a function of climate synchrony with the estuary.
-
-
+The Fraser River watershed drains approximately 217,000 km^2^ of diverse terrain and climate (Fig.$~\ref{fig:map}$). Originating in the western Cordillera of North America, the basin drains snow laiden Canadian Rockies and Coastal Mountains. Converging and running down the dry central plateau of British Columbia, the river eventually crashes through the coastal mountains by way of Hells Gate canyon and spills into the Georgia Straight of the Pacific Ocean. We focus on the Fraser River watershed because the basin is large, topologically diverse, impacted by climate change [e.g., @Kang:2014; @Kang:2016; @Dery:2012; Schnorbus:2010; Shrestha:2012; Healey:2011] and home to five species of salmon. Funneling such a wide diversity of climate and divergent climate shifts to the same ocean outlet, the Fraser basin provides the necessary context for testing spatial match-mismatch patterns in salmon. 
 
 \begin{figure}[H]
 \centering
@@ -33,5 +33,31 @@ The Fraser River watershed drains approximately 217,000 km^2^ of diverse terrain
 \caption{Fraser River watershed in British Columbia Canada, colored by the mean annual temperature in 1970 (left) and 2010 (right).}
 \label{fig:map}
 \end{figure}
+
+*Pink salmon*
+
+Although most widely known for sockeye [@Eliason:2011], the Fraser River basin once also sustained large abundances of pink salmon (*Oncorhynchus gorbuscha*) [@Ricker:1989]. Extirpated from much of their original range due to a rockslide in 1913, pink salmon did not recolonize above Hells Gate canyon until fish passage was reinstated in 1947 [@Roos:1991]. Despite extreme mortality in the early 19th century and incomplete recovery [@Pess:2012], we chose to focus our study on pink salmon because their life history patterns are relatively invariant [@Neave:1966]. Salmon life history variation at the species and population level makes estimating outmigration and estuary arrival timing difficult without direct observations. Unlike most pacific salmon species, pink salmon outmigrate almost immediately upon emerging from the gravel. This relatively deterministic life history pattern eliminates a large amount of uncertainty when estimating estuary arrival timing. 
+
+*Emergence*
+
+Predicting pink salmon estuary arrival is largely a function of predicting emergence. Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence and because pink salmon immediately outmigrate we can apply a stream distance constant that estimates arrival. In order to account for temperature fluctuations in the natural environment we took a degree-day approach and described the relationship between thermal accumulation above 0$\text{\textdegree}$C and days to emergence using a linear regression model:
+
+\begin{linenomath*}
+\begin{equation}
+	\hat{E}_{s} = b + m\mathrm{CDD}_{T_{0},s} + \eta_{s}, \quad
+  \eta_{s} \sim \mathcal{N}(0, f(\mathrm{A}_{s})) \label{eq1},
+\end{equation}
+\end{linenomath*}
+
+where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days for observation ($s$) given a threshold temperature ($\mathrm{T}_{0}$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. 
+
+Data were gathered from studies that reported days to emergence during a controlled thermal regime. For instance, @Beacham:1986 incubated five stocks of fertillized pink salmon eggs at 4, 8 and 12$\text{\textdegree}$C and recorded the number of days to 50\% emergence. By multiplying the days to emergence by the incubation temperature we get an estimate for the mean number of degree-days to emergence for each population under differerent thermal regimes. Many studies where similar in using thermal constants [@Brannon:1987; @Beacham:1988a; @Beacham:1988b; @Murray:1988], while others used variable thermal regimes that mimic seasonal shifts [@Murray:1986; @Beacham:1987]. Temperature accumulation under variable thermal regimes were accounted for provided the details of each studies methods. Our literature search resulted in 104 estimates of cumulative degree-days and days to emergence for 20 populations in British Columbia, derived from from seven studies.
+
+*Spawn Timing*
+
+
+
+such that spawn timing (i.e., nuSEDS), stream temperature, climate [@Wang:2012], emergence [e.g., Beacham:1988] and plankton bloom [@Allen:2013] data are all available. Using these data we estimate when hypothetical populations throughout the basin would be expected to arrive in the estuary, the probability of overlap with zooplankton blooms and the degree to which overlap is a function of climate synchrony with the estuary.
+
 
 #References
