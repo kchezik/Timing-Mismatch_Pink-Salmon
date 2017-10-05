@@ -45,11 +45,19 @@ Predicting pink salmon estuary arrival is largely a function of predicting emerg
 \begin{linenomath*}
 \begin{equation}
 	\hat{E}_{s} = b + m\mathrm{CDD}_{T_{0},s} + \eta_{s}, \quad
-  \eta_{s} \sim \mathcal{N}(0, f(\mathrm{A}_{s})) \label{eq1},
+  \eta_{s} \sim \mathcal{N}(0, f(\mathrm{CDD}_{T_{0},s})) \label{eq1},
 \end{equation}
 \end{linenomath*}
 
-where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days for observation ($s$) given a threshold temperature ($\mathrm{T}_{0}$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. 
+where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days for observation ($s$) given a threshold temperature ($\mathrm{T}_{0}$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
+
+\begin{linenomath*}
+\begin{equation}
+	f(\mathrm{CDD}_{T_{0},s}) = \sigma_E^2 \exp(2\updelta\mathrm{CDD}_{T_{0},s}) \label{eq2},
+\end{equation}
+\end{linenomath*}
+
+where we allowed for the variance in our error ($\eta_{s}$) to decline with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameterm.
 
 Data were gathered from studies that reported days to emergence during a controlled thermal regime. For instance, @Beacham:1986 incubated five stocks of fertillized pink salmon eggs at 4, 8 and 12$\text{\textdegree}$C and recorded the number of days to 50\% emergence. By multiplying the days to emergence by the incubation temperature we get an estimate for the mean number of degree-days to emergence for each population under differerent thermal regimes. Many studies where similar in using thermal constants [@Brannon:1987; @Beacham:1988a; @Beacham:1988b; @Murray:1988], while others used variable thermal regimes that mimic seasonal shifts [@Murray:1986; @Beacham:1987]. Temperature accumulation under variable thermal regimes were accounted for provided the details of each studies methods. Our literature search resulted in 104 estimates of cumulative degree-days and days to emergence for 20 populations in British Columbia, derived from from seven studies.
 
