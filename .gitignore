@@ -83,4 +83,7 @@
 *.png
 
 /Notes/
+
 /maps/
+
+*.vim
