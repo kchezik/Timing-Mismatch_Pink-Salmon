@@ -653,7 +653,7 @@ saveRDS(final, file = "Data_03_Emergence.rds")
 library(nlme); library(rstan); library(tidyverse)
 #Set Up MultiCore Processing for Stan.
 rstan_options(auto_write = TRUE)
-options(mc.cores = 7)
+options(mc.cores = 4)
 
 dat = readRDS("Data_03_Emergence.rds")
 
@@ -667,10 +667,10 @@ simple = dat %>% select(Location, Treatment, Source, Northing, Easting) %>% dist
 mod = gls(model = Days.to.Emergence~DD_center, data = simple, weights = varExp(form = ~DD_center))
 
 dat.list = list(N = nrow(simple),
-		 x = simple$Degree.Days,
+		 x = simple$DD_center,
 		 y = simple$Days.to.Emergence)
-fit = stan(file = "03_StanMod.stan", data = dat.list,
-					 iter = 20000, chains = 4, warmup = 8000, thin = 3)
+fit = stan(file = "./03_Emergence_Model/03b_EmergenceDDModel.stan", data = dat.list,
+					 iter = 8000, chains = 4, warmup = 4000, thin = 3, save_dso = F)
 save(fit, file = "stanMod.RData")
 print(fit, digits = 4)
 summary(mod)
