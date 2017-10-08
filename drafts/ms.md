@@ -36,11 +36,11 @@ The Fraser River watershed drains approximately 217,000 km^2^ of diverse terrain
 
 *Pink salmon*
 
-Although most widely known for sockeye [@Eliason:2011], the Fraser River basin once also sustained large abundances of pink salmon (*Oncorhynchus gorbuscha*) [@Ricker:1989]. Extirpated from much of their original range due to a rockslide in 1913, pink salmon did not recolonize above Hells Gate canyon until fish passage was reinstated in 1947 [@Roos:1991]. Despite extreme mortality in the early 19th century and incomplete recovery [@Pess:2012], we chose to focus our study on pink salmon because their life history patterns are relatively invariant [@Neave:1966]. Salmon life history variation at the species and population level makes estimating outmigration and estuary arrival timing difficult without direct observations. Unlike most pacific salmon species, pink salmon outmigrate almost immediately upon emerging from the gravel. This relatively deterministic life history pattern eliminates a large amount of uncertainty when estimating estuary arrival timing. 
+Although most widely known for sockeye [@Eliason:2011], the Fraser River basin once also sustained large abundances of pink salmon (*Oncorhynchus gorbuscha*) [@Ricker:1989]. Extirpated from much of their original range due to a rockslide in 1913, pink salmon did not begin to recolonize above Hells Gate canyon until fish passage was reinstated in 1947 [@Roos:1991]. Despite extreme mortality in the early 19th century and incomplete recovery to date [@Pess:2012], we chose to focus our study on pink salmon because their life history patterns are relatively invariant [@Neave:1966]. Unlike most pacific salmon species, pink salmon outmigrate almost immediately upon emerging from the gravel. This relatively deterministic life history pattern eliminates significant behavioral uncertainty. Ultimately, by estimating emergence timing and accounting for the river distance to the estuary, variation in pink salmon arrival is largely driven by abiotic factors which have been relatively well monitored in the Fraser River watershed.
 
-*Emergence*
+*Emergence timing estimation*
 
-Predicting pink salmon estuary arrival is largely a function of predicting emergence. Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence and because pink salmon immediately outmigrate we can apply a stream distance constant that estimates arrival. In order to account for temperature fluctuations in the natural environment we took a degree-day approach and described the relationship between thermal accumulation above 0$\text{\textdegree}$C and days to emergence using a linear regression model:
+Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence. In order to account for temperature fluctuations in the natural environment we took a degree-day approach and described the relationship between thermal accumulation above 0$\text{\textdegree}$C and days to emergence using a linear regression model:
 
 \begin{linenomath*}
 \begin{equation}
@@ -49,7 +49,7 @@ Predicting pink salmon estuary arrival is largely a function of predicting emerg
 \end{equation}
 \end{linenomath*}
 
-where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days for observation ($s$) given a threshold temperature ($\mathrm{T}_{0}$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
+where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days for observation ($s$) given a threshold temperature ($T$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
 
 \begin{linenomath*}
 \begin{equation}
@@ -57,7 +57,7 @@ where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $
 \end{equation}
 \end{linenomath*}
 
-where we allowed for the variance in our error ($\eta_{s}$) to decline with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameterm.
+where we allowed for the variance in our error ($\eta_{s}$) to decline with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameter. This model was fit using RStan 2.16.2 [@Stan:2017] in a bayesian framework using Hamiltonian Monte Carlo (HMC) sampling. We allowed four chains to burn in 8,000 iterations before sampling every third iteration 20,000 times, ensuring convergence among chains and independence between samples.
 
 Data were gathered from studies that reported days to emergence during a controlled thermal regime. For instance, @Beacham:1986 incubated five stocks of fertillized pink salmon eggs at 4, 8 and 12$\text{\textdegree}$C and recorded the number of days to 50\% emergence. By multiplying the days to emergence by the incubation temperature we get an estimate for the mean number of degree-days to emergence for each population under differerent thermal regimes. Many studies where similar in using thermal constants [@Brannon:1987; @Beacham:1988a; @Beacham:1988b; @Murray:1988], while others used variable thermal regimes that mimic seasonal shifts [@Murray:1986; @Beacham:1987]. Temperature accumulation under variable thermal regimes were accounted for provided the details of each studies methods. Our literature search resulted in 104 estimates of cumulative degree-days and days to emergence for 20 populations in British Columbia, derived from from seven studies.
 
