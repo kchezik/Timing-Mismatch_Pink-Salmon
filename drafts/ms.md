@@ -40,7 +40,7 @@ Although most widely known for sockeye [@Eliason:2011], the Fraser River basin o
 
 *Emergence timing estimation*
 
-Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence. In order to account for temperature fluctuations in the natural environment we took a degree-day approach and described the relationship between thermal accumulation above 0$\text{\textdegree}$C and days to emergence using a linear regression model:
+Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence. In order to account for temperature fluctuations in the natural environment we took a degree-day approach where the accumulation of thermal time since fertilization predicts the timing of emergence. This model is appealing because stream temperature data is widely available throughout the Fraser River basin. To described the relationship between thermal accumulation and days to emergence we used a linear regression model:
 
 \begin{linenomath*}
 \begin{equation}
@@ -49,7 +49,7 @@ Incubation temperatures dominate the rate of egg growth and development [@Murray
 \end{equation}
 \end{linenomath*}
 
-where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days for observation ($s$) given a threshold temperature ($T$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
+where $\hat{E}_{s}$ represents the days to emergence at each observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days per observation ($s$) given a threshold temperature ($T$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
 
 \begin{linenomath*}
 \begin{equation}
@@ -59,10 +59,21 @@ where $\hat{E}_{s}$ represents the days to emergence for observation ($s$) and $
 
 where we allowed for the variance in our error ($\eta_{s}$) to decline with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameter. This model was fit using RStan 2.16.2 [@Stan:2017] in a bayesian framework using Hamiltonian Monte Carlo (HMC) sampling. We allowed four chains to burn in 8,000 iterations before sampling every third iteration 20,000 times, ensuring convergence among chains and independence between samples.
 
-Data were gathered from studies that reported days to emergence during a controlled thermal regime. For instance, @Beacham:1986 incubated five stocks of fertillized pink salmon eggs at 4, 8 and 12$\text{\textdegree}$C and recorded the number of days to 50\% emergence. By multiplying the days to emergence by the incubation temperature we get an estimate for the mean number of degree-days to emergence for each population under differerent thermal regimes. Many studies where similar in using thermal constants [@Brannon:1987; @Beacham:1988a; @Beacham:1988b; @Murray:1988], while others used variable thermal regimes that mimic seasonal shifts [@Murray:1986; @Beacham:1987]. Temperature accumulation under variable thermal regimes were accounted for provided the details of each studies methods. Our literature search resulted in 104 estimates of cumulative degree-days and days to emergence for 20 populations in British Columbia, derived from from seven studies.
+Data were gathered from studies that reported days to emergence during a controlled thermal regime. For instance, @Beacham:1986 incubated five stocks of fertillized pink salmon eggs at 4, 8 and 12$\text{\textdegree}$C and recorded the number of days to 50\% emergence. By multiplying the days to emergence by the incubation temperature and summing these values, we get an estimate for the cumulative number of degree-days to emergence for each population under differerent thermal regimes. Many studies incubated eggs at thermal constants [@Brannon:1987; @Beacham:1988a; @Beacham:1988b; @Murray:1988], while others used variable thermal regimes that mimic seasonal shifts [@Murray:1986; @Beacham:1987]. Temperature accumulation under variable thermal regimes were accounted for provided the details of each studies methods. Our literature search resulted in 104 estimates of cumulative degree-days and days to emergence for 20 populations in British Columbia, derived from from seven studies.
 
 *Spawn Timing*
 
+Our degree-day model allows us to estimate emergence using simply stream water temperature but is limited by the fact that we must also know when spawning occured. Spawning dictates when we begin accumulating thermal time such that adult behavior impacts emergence and subsequently estuary arrival timing. Because we would like to predict emergence in locations of variable thermal regimes and where pink salmon spawn data are either not available or spawning does not occur, we need a model that allows us to predict when spawning might occur were it to happen in a given location. Here we use a generalized linear model:
+
+(model)
+
+where ....
+
+We included an autocorrelation stucture that accounts for the spatial relationship between stream connections within the Fraser River network:
+
+(auto-correlation structure)
+
+We chose this model in part because pink salmon have only recently recolonized much of their historic range and in part because pink salmon have a strong straying tendency relative to other salmon species [@Pess:2012]. Therefore we expect populations that are closer together along the river network will share more genetic information and respond more similarly to abiotic drivers than populations further apart. Acounting for network spatial relationship offer a way of accounting for straying among populations thereby reducing uncertainty in our model.
 
 
 such that spawn timing (i.e., nuSEDS), stream temperature, climate [@Wang:2012], emergence [e.g., Beacham:1988] and plankton bloom [@Allen:2013] data are all available. Using these data we estimate when hypothetical populations throughout the basin would be expected to arrive in the estuary, the probability of overlap with zooplankton blooms and the degree to which overlap is a function of climate synchrony with the estuary.
