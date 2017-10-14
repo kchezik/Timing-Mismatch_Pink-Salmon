@@ -63,11 +63,16 @@ Data were gathered from studies that reported days to emergence during a control
 
 *Spawn Timing*
 
-Our degree-day model allows us to estimate emergence using simply stream water temperature but is limited by the fact that we must also know when spawning occured. Spawning dictates when we begin accumulating thermal time such that adult behavior impacts emergence and subsequently estuary arrival timing. Because we would like to predict emergence in locations of variable thermal regimes and where pink salmon spawn data are either not available or spawning does not occur, we need a model that allows us to predict when spawning might occur were it to happen in a given location. Here we use a generalized linear model:
+Our degree-day model allows us to estimate emergence using simply stream water temperature but is limited by the fact that we must also know when spawning occured. Spawning dictates when we begin accumulating thermal time such that adult behavior impacts emergence and subsequently estuary arrival timing. Because we would like to predict emergence over a broad climatic landscape, often in locations where spawn data are not available or spawning has not been observed, we need a model that allows us to predict when spawning might occur were it to happen in a given location. Here we use a spatial linear mixed effects model:
 
 (model)
+\begin{linenomath*}
+\begin{equation}
+\hat{S}_{s,t} = \mathrm{X}_{s,t}\beta + \mathrm{z}_{d} + \mathrm{W}_{s} \label{eq3}
+\end{equation}
+\end{linenomath*}
 
-where ....
+where $\hat{S}_{s,t}$ represents a spawn date at site ($\mathrm{s}$) for year ($\mathrm{t}$) and $\mathrm{X}_{s,t}$ represents a matrix of climate and landscape predictor variables. 
 
 We included an autocorrelation stucture that accounts for the spatial relationship between stream connections within the Fraser River network:
 
