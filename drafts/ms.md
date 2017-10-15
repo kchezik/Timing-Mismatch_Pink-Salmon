@@ -63,25 +63,21 @@ Data were gathered from studies that reported days to emergence during a control
 
 *Spawn Timing*
 
-Our degree-day model allows us to estimate emergence using simply stream water temperature but is limited by the fact that we must also know when spawning occured. Spawning dictates when we begin accumulating thermal time such that adult behavior impacts emergence and subsequently estuary arrival timing. Because we would like to predict emergence over a broad climatic landscape, often in locations where spawn data are not available or spawning has not been observed, we need a model that allows us to predict when spawning might occur were it to happen in a given location. Here we use a spatial linear mixed effects model:
-
-(model)
+Adult spawning timing dictates when our emergence model begins accumulating thermal time, subsequently affecting emergence and estuary arrival timing. Therefore, we must account for variation among spawning populations as well as in annual fluxuations and long-term trends within populations when predicting emergence. Furthermore, stream temperature data are not always coincident in space and time with spawning data. To account for variation in spawn timing and predict when spawning would occur where pink salmon are not currently known to spawn, we built a stream network linear mixed effects model:  
+ 
 \begin{linenomath*}
 \begin{equation}
-\hat{S}_{s,t} = \mathrm{X}_{s,t}\beta + \mathrm{z}_{d} + \mathrm{W}_{s} \label{eq3}
+\hat{S}_{s,t} = \mathrm{X}\beta + \epsilon, \quad
+\epsilon \sim \mathrm{z}_{d} + \mathrm{z}_{nug} + \mathrm{z}_{y} + \mathrm{z}_{s} \label{eq3},
 \end{equation}
 \end{linenomath*}
 
-where $\hat{S}_{s,t}$ represents a spawn date at site ($\mathrm{s}$) for year ($\mathrm{t}$) and $\mathrm{X}_{s,t}$ represents a matrix of climate and landscape predictor variables. 
+where spawn date $\hat{S}$ at site ($\mathrm{s}$) in year ($\mathrm{t}$) is predicted by a matrix of climate and landscape variables $\mathrm{X}$, where the relationship between spawn date and these predictors are described by a vector of $\beta$ coefficients. Residual error ($\epsilon$) is decomposed into multiple random effects ($\mathrm{z}$) to capture the spatial autocovariance between populations. A "tail-down" autocovariance model ($\mathrm{z}_{d}$) describes the relationship among flow unconnected locations along the river network [@Ver:2010]. We used year ($\mathrm{z}_{y}$) and a site ($\mathrm{z}_{s}$) identifiers as random effects to account for year specific variation common across sites and repeated measures at individual sites respectively. The remaining independant and random error is captured in $\mathrm{z}_{nug}$.
 
-We included an autocorrelation stucture that accounts for the spatial relationship between stream connections within the Fraser River network:
+Spawn timing data were obtained from the nuSEDS database owned and maintained by the Canadian Department of Fisheries and Oceans. We selected pink salmon observations from throughout British Columbia that included an estimate of the begining and peak spawn date. To capture variation in spawn timing we assumed the spawning period to be well approximated by a normal distribution and sampled from distributions for each site and year. Standard deviation ($\sigma$) estimates for each distribution were approximated by searching over a variety of $\sigma$ values and selecting the value whose difference between the mean and 99th percentile best approximated the observed difference between start and peak spawn dates. We sampled distributions 22 times for each of the 379 unique site-year combinations, resulting in 8734 spawn date estimates at 64 locations between 1957 and 1998. We limited our sub-sampling to reduce computational complexity and improve model fit times [@Ver:2014].
 
-(auto-correlation structure)
+Temperature has been loosely connected with spawn timing in pink salmon [@Groot:1991] and may contribute to genetic controls on spawning and egg development [@Hebert:1998; @Smoker:1998]. To account for temperature on spawn timing we used Climate WNA [@Wang:2016] to estimate mean fall (September - October) and winter (November - February) air temperature as well as mean fall precipitation at observation and prediction sites. We also included elevation to act as a relative estimate of migration distance and to account for topographic interactions with precipitation.
 
-We chose this model in part because pink salmon have only recently recolonized much of their historic range and in part because pink salmon have a strong straying tendency relative to other salmon species [@Pess:2012]. Therefore we expect populations that are closer together along the river network will share more genetic information and respond more similarly to abiotic drivers than populations further apart. Acounting for network spatial relationship offer a way of accounting for straying among populations thereby reducing uncertainty in our model.
-
-
-such that spawn timing (i.e., nuSEDS), stream temperature, climate [@Wang:2012], emergence [e.g., Beacham:1988] and plankton bloom [@Allen:2013] data are all available. Using these data we estimate when hypothetical populations throughout the basin would be expected to arrive in the estuary, the probability of overlap with zooplankton blooms and the degree to which overlap is a function of climate synchrony with the estuary.
-
+We chose a stream network model in part because pink salmon have only recently recolonized much of their historic range and in part because pink salmon have a strong straying tendency relative to other salmon species [@Pess:2012]. Therefore we expect populations that are closer together along the river network will share more genetic information and respond more similarly to abiotic drivers than populations further apart. Acounting for network spatial relationships offers a way of directly addressing straying behaviour thereby reducing uncertainty in our spawn timing predictions.
 
 #References
