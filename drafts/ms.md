@@ -80,4 +80,8 @@ Temperature has been loosely connected with spawn timing in pink salmon [@Groot:
 
 We chose a stream network model in part because pink salmon have only recently recolonized much of their historic range and in part because pink salmon have a strong straying tendency relative to other salmon species [@Pess:2012]. Therefore we expect populations that are closer together along the river network will share more genetic information and respond more similarly to abiotic drivers than populations further apart. Acounting for network spatial relationships offers a way of directly addressing straying behaviour thereby reducing uncertainty in our spawn timing predictions.
 
+*Emergence & arrival timing estimation*
+
+Pink salmon emergence varies greatly within and among populations due to variation in spawn timing and thermal habitat. To estimate the distribution of emergence timing we first use our spawn timing model (eq.$\ref{eq3}$) to predict the mean spawn date at temperature monitoring sites throughout the Fraser River basin. To capture the variation spawn timing contributes to emergence estimates, we sampled a t-distribution 1000 times using our estimate mean and standard error values for each site. We then accumulated degree-days and days to emergence from our spawn date estimates and retain dates where the probability of emergence is greater than 0 and less than 100% according to our degree-day emergence model (i.e., eq.$\ref{eq1}$). This process results in distributions of emergence dates for each site and year water temperature data is available.
+
 #References
