@@ -26,3 +26,22 @@ net = net %>% select(geolocid, upDist) %>% distinct() %>%
 
 #Save estimated linear and river distance and travel time estimate reference to a dataframe.
 as.tbl(net) %>% saveRDS(., file = "Data_06_DistanceTravelRef.rds")
+
+
+
+
+#Hope Flow Station
+#Peak Discharge in 2017 was 14,800 m^3/s
+#River Width at peak is approximately 612m
+#River Depth at peak was 10.863
+
+#Therefore the max velocity of the stream is appoximately .... velocity = discharge/(depth*width)
+
+14800/(10.863*665) #2.048756 m/s
+
+# If we multiply by the seconds in a day and divide by 1000 meters we get meters per day.
+(2.048756*43200)/1000 # 88.50626
+
+# Because pink salmon have been shown to swim a bit thereby increasing speed we can probably safely round to 90km a day. This value assumes day and night travel and max stream velocity. A more reasonable number may be 45km per day because pink salmon travel by night predominately.
+
+#Ultimately our range of travel times under these assumptions would be 0.5 to 26.5 days compared with our assumed 2 days.
