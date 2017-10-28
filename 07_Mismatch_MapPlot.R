@@ -101,12 +101,12 @@ ggplot(net, aes(`_fit_`,`logitPerc`, color = `_CooksD_`)) +
 #Cross validation.
 cv.out = CrossValidationSSN(mod)
 par(mfrow = c(1, 2))
-plot(mod$sampinfo$z,
-		 cv.out[, "cv.pred"], pch = 19,
+plot(psych::logistic(mod$sampinfo$z),
+		 psych::logistic(cv.out[, "cv.pred"]), pch = 19,
 		 xlab = "Observed Data", ylab = "LOOCV Prediction")
 abline(0, 1)
-plot( na.omit( getSSNdata.frame(network)[, "logitPerc"]),
-			cv.out[, "cv.se"], pch = 19,
+plot( psych::logistic(na.omit( getSSNdata.frame(network)[, "logitPerc"])),
+			psych::logistic(cv.out[, "cv.se"]), pch = 19,
 			xlab = "Observed Data", ylab = "LOOCV Prediction SE")
 
 ###################
