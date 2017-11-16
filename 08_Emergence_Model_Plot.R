@@ -7,7 +7,8 @@ load("stanMod.RData")
 simple = dat %>% group_by(Treatment,Location,Source) %>% 
 	summarize(Degree.Days = mean(Degree.Days), Days.to.Emergence = mean(Days.to.Emergence)) %>% 
 	ungroup()
-simple = simple %>% mutate(DD_center = Degree.Days-mean(Degree.Days))
+simple = simple %>% mutate(DD_center = Degree.Days-mean(Degree.Days), 
+													 logitDOY = psych::logit(simple$Days.to.Emergence/365))
 
 simple = dat %>% select(Location, Treatment, Source, Northing, Easting, ConstVar) %>% distinct() %>% left_join(simple, ., by = c("Location","Treatment","Source"))
 
@@ -16,9 +17,11 @@ param = rstan::extract(fit) %>% do.call("cbind",.) %>% tbl_df(.)
 lim = apply(param, 1, function(x){
 	#Upper Bound
 	est = x[[1]] + x[[2]]*simple$DD_center + 1.96*sqrt(x[[3]]^2*exp(2*simple$DD_center*x[[4]]))
+	est = boot::inv.logit(est)*365
 	up = max(est); meanUp = mean(est)
 	#Lower Bound
 	est = x[[1]] + x[[2]]*simple$DD_center - 1.96*sqrt(x[[3]]^2*exp(2*simple$DD_center*x[[4]]))
+	est = boot::inv.logit(est)*365
 	low = min(est); meanLow = mean(est)
 	data.frame(up, low, meanUp, meanLow)
 }) %>% do.call("rbind",.)
@@ -43,13 +46,15 @@ for(i in 1:nrow(param)){
 	x = param[i,]
 	#Upper Bound
 	est = x[[1]] + x[[2]]*simple$DD_center + 1.96*sqrt(x[[3]]^2*exp(2*simple$DD_center*x[[4]]))
+	est = boot::inv.logit(est)*365
 	lines(x = sort(simple$Degree.Days), y = sort(est, decreasing = T), col = x[[6]], lwd = line.w)
 	#Lower Bound
 	est = x[[1]] + x[[2]]*simple$DD_center - 1.96*sqrt(x[[3]]^2*exp(2*simple$DD_center*x[[4]]))
+	est = boot::inv.logit(est)*365
 	lines(x = sort(simple$Degree.Days), y = sort(est, decreasing = T), col = x[[7]], lwd = line.w)
 }
 #Mean Trend
-lines(x = sort(simple$Degree.Days), y = sort(mean(param$b0) + mean(param$b1)*simple$DD_center, decreasing = T),
+lines(x = sort(simple$Degree.Days), y = boot::inv.logit(sort(mean(param$b0) + mean(param$b1)*simple$DD_center, decreasing = T))*365,
 			col = "black", lty = "dashed")
 #Add points
 points(x = simple$Degree.Days, y = simple$Days.to.Emergence, pch = 16, cex = 0.9, col = "#25252599")

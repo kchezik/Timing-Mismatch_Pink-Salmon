@@ -44,7 +44,7 @@ Incubation temperatures dominate the rate of egg growth and development [@Murray
 
 \begin{linenomath*}
 \begin{equation}
-	\hat{E}_{s} = b + m\mathrm{CDD}_{T_{0},s} + \eta_{s}, \quad
+	\mathrm{E}_{s} = b + m\mathrm{CDD}_{T_{0},s} + \eta_{s}, \quad
   \eta_{s} \sim \mathcal{N}(0, f(\mathrm{CDD}_{T_{0},s})) \label{eq1},
 \end{equation}
 \end{linenomath*}
