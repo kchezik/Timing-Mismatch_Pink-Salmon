@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+This code takes a bit over two days to complete on my personal laptop.
+
 ```{r}
 library(tidyverse);library(lubridate);library(multidplyr)
 #Read in temperature data.
@@ -29,8 +31,8 @@ pstrr = as.data.frame(fit)
 
 1. Accumulate degree-days above 0C and accumulate the number of days that have passed concurrently.
 
-2. On each day, use the number of degree-days that have passed to determine the probability that emergence may have occured given the number of days that have passed using the bayesian degree-day model.
-	a. Select days with a likelyhood of emergence greater than 0 and less than 100.
+2. On each day, use the number of degree-days that have passed to determine the probability that emergence may have occurred given the number of days that have passed using the Bayesian degree-day model.
+	a. Select days with a likelihood of emergence greater than 0 and less than 100.
 	b. Plotted by site and year, density distributions of emergence day should represent the variability in emergence timing based on the variability of spawn timing and uncertainty in the DD emergence model. The mean value represents the expected day of emergence and the values around it should demonstrate our uncertainty around that value.
 	
 ```{r}
@@ -69,7 +71,7 @@ emergProb = function(df, modDF, adjust){
 		# ... given the observed number of degree-days.
 		out = map2(df$DD0, df$CumDay, function(x, y, mod = modDF, center = adjust){
 			mean = mod$b0 + mod$b1 * (x-center) #All mean 'days to emergence estimates'.
-			prob = mean(pnorm(q = y, mean = mean, sd = mod$sigma)) #Probability of emergence.
+			prob = mean(pnorm(q = boot::logit(y/365), mean = mean, sd = mod$sigma)) #Probability of emergence.
 			data_frame(DD0=x, CumDay = y, ProbEmerg = round(prob, 3)) #Hold in dataframe with reference values ...
 		}) %>% do.call("rbind",.)
 		#If there are days with an emergence probability greater than 0 then return a df. Otherwise return NULL.
@@ -95,6 +97,7 @@ spnPar %>%
 #Load necessary libraries across cores.
 	cluster_library("tidyverse") %>% 
 	cluster_library("lubridate") %>% 
+	cluster_library("boot") %>% 
 
 #Assign Objects to Nodes
 	cluster_assign_value("temp", temp) %>% 
@@ -139,4 +142,4 @@ saveRDS(fin, file = "Data_04_EmergProbs.rds")
 
 #Note
 
-Spawn dates were sampled with replacement so some days will be sampled more frequently than others. This will increase the prevalence of values that are more likely to have been the spawn date and downweight emergence days with unlikely spawndates. I'm not sure if this makes perfect sense given that an sampling without replacement would have still led to days of high likelyhood to be more prevalent than days of low liklihood. Could be a big waste of processing time, does it artificially increase our certainty or represent the true level of certainty?
+Spawn dates were sampled with replacement so some days will be sampled more frequently than others. This will increase the prevalence of values that are more likely to have been the spawn date and down weight emergence days with unlikely spawn dates. I'm not sure if this makes perfect sense given that an sampling without replacement would have still led to days of high likelihood to be more prevalent than days of low likelihood. Could be a big waste of processing time, does it artificially increase our certainty or represent the true level of certainty?

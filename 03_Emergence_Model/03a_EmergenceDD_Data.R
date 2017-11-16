@@ -660,17 +660,19 @@ dat = readRDS("Data_03_Emergence.rds")
 simple = dat %>% group_by(Treatment,Location,Source) %>% 
 	summarize(Degree.Days = mean(Degree.Days), Days.to.Emergence = mean(Days.to.Emergence)) %>% 
 	ungroup()
-simple = simple %>% mutate(DD_center = Degree.Days-mean(Degree.Days))
+simple = simple %>% mutate(DD_center = Degree.Days-mean(Degree.Days), 
+													 logitDOY = psych::logit(simple$Days.to.Emergence/365))
 
 simple = dat %>% select(Location, Treatment, Source, Northing, Easting) %>% distinct() %>% left_join(simple, ., by = c("Location","Treatment","Source"))
 
-mod = gls(model = Days.to.Emergence~DD_center, data = simple, weights = varExp(form = ~DD_center))
+mod = gls(model = logitDOY~DD_center, data = simple, weights = varExp(form = ~DD_center))
 
 dat.list = list(N = nrow(simple),
 		 x = simple$DD_center,
-		 y = simple$Days.to.Emergence)
+		 y = simple$logitDOY)
 fit = stan(file = "./03_Emergence_Model/03b_EmergenceDDModel.stan", data = dat.list,
-					 iter = 8000, chains = 4, warmup = 4000, thin = 3, save_dso = F)
+					 iter = 8000, chains = 4, warmup = 4000, thin = 3)
+
 save(fit, file = "stanMod.RData")
 print(fit, digits = 4)
 summary(mod)

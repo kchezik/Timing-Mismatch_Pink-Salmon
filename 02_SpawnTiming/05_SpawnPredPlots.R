@@ -121,8 +121,10 @@ sites = readOGR(dsn = "./02_SpawnTiming/lsn/sites_obs.ssn/", layer = "sites")
 df = sites@data
 df = bind_cols(df, data.frame(sites@coords))
 lim = df %>% group_by(geolocid) %>% 
-	filter(min(abs(peak - median(peak))) == abs(peak - median(peak))) %>% sample_n(., 1) %>%  
-	select(geolocid, peak, rid, ratio, h2oAreaKm2, upDist, afvArea, coords.x1, coords.x2)
+	summarise(medianP = median(peak+100))
+lim = df %>% select(geolocid, rid, ratio, h2oAreaKm2, upDist, afvArea, coords.x1, coords.x2) %>% 
+	distinct() %>% 
+	left_join(lim, ., by = "geolocid")
 
 sp = SpatialPointsDataFrame(coords = lim[, c("coords.x1","coords.x2")], data = data.frame(lim), proj4string = sites@proj4string)
 writeOGR(obj = sp, dsn = "./maps/", layer = "sites", driver = "ESRI Shapefile", overwrite_layer = T)
