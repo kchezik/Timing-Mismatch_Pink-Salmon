@@ -1,5 +1,4 @@
-library(tidyverse); library(lubridate); library(attenPlot); library(sp); library(rgdal); library(ggjoy)
-library(viridis); library(ggthemes)
+library(tidyverse); library(lubridate); library(attenPlot); library(sp); library(rgdal); library(ggridges); library(viridis); library(ggthemes)
 #Get Emergence Probability data.
 emerg = read_rds("Data_04_EmergProbs.rds") %>% ungroup() %>% select(-1)
 
@@ -21,7 +20,8 @@ emerg %>% filter(geolocid %in% id1, !is.na(emergDate)) %>%
 #Read in distance and travel timing estimate data.
 dist = read_rds("Data_06_DistanceTravelRef.rds")
 #Add distance and timing columns to emergence data.
-estuary = emerg %>% left_join(., dist) %>% select(-latitude, -longitude) %>% mutate(arriveDate = emergDate + travelDays)
+estuary = emerg %>% left_join(., dist, by = c("geolocid","year")) %>%
+	mutate(arriveDate = emergDate + travelDays_vel)
 
 #Phytoplankton Data from Dr. Allen.
 phyto = read_delim(file = "Data_05_bloomdate_31mar2016.dat", skip = 3, delim = " ")
@@ -162,14 +162,13 @@ mismatch = mismatch %>% mutate(region = if_else(climDiverg<15, 1,
 																												if_else(climDiverg<28.9 & climDiverg> 24.5, 2.5,3))))
 
 #Output overlap/climate divergence data to a shapefile.
-sp = mismatch %>% filter(!is.na(diff)) %>% select(geolocid, year, diff, perc, climDiverg, enso, pdo, latitude, longitude) %>% data.frame(.)
+sp = mismatch %>% filter(!is.na(diff)) %>% select(geolocid, year, diff, perc, perc_median, climDiverg, enso, pdo, latitude, longitude) %>% data.frame(.)
 sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c(1:7)], proj4string = CRS("+init=epsg:4326"))
 sp = spTransform(sp, CRS("+init=epsg:3005"))
 writeOGR(obj = sp, dsn = "./02_SpawnTiming/lsn/sites/", layer = "sites_overlap", driver = "ESRI Shapefile", overwrite_layer = T)
 
 #Look for climatic clumping. Three distinct climatic regions with a transition zone.
-ggplot(mismatch, aes(climDiverg, group = region, color = as.factor(region), fill = as.factor(region))) +
-	geom_density(adjust = 2,alpha = 0.5)
+ggplot(mismatch, aes(climDiverg, group = region, color = as.factor(region), fill = as.factor(region))) + geom_density(adjust = 2,alpha = 0.5)
 
 #Plot the response variables against eachother. This gives strong evidence that our predictors are measuring match/mismatch...
 # ... because as the predicted arrival time diverges from the observed phytoplankton bloom, ...
@@ -215,11 +214,11 @@ ggplot(mismatch, aes(climDiverg, diff, color = resid, shape = as.factor(region))
 #Read in emergence data.
 df = read_rds("Data_04_EmergProbs.rds") %>% ungroup()
 #Combine with mismatch data.
-df = mismatch %>% select(geolocid, year, dateZ, diff, perc, resid, climDiverg, region, travelDays) %>% 
-	left_join(df, ., by = c("geolocid","year"))
+df = mismatch %>% select(geolocid, year, dateZ, diff, perc, resid, climDiverg, region, travelDays_vel) %>% left_join(df, ., by = c("geolocid","year"))
 #Add column with estuary arrival day of year.
 df.test = df %>% filter(!is.na(perc)) %>% 
-	mutate(EDOY = yday(emergDate+100)-86 + travelDays)
+	mutate(EDOY = yday(emergDate+100)-86 + travelDays_vel,
+				 groups = paste(as.character(geolocid),as.character(year),sep="_"))
 #
 set.seed(123)
 subPhyto = phyto %>% group_by(Year) %>% do({
@@ -228,10 +227,12 @@ subPhyto = phyto %>% group_by(Year) %>% do({
 
 ggplot(NULL) + 
 	geom_vline(data = subPhyto, aes(xintercept = EDOY), color = "#BDBDBD", alpha = 0.2, size = 1) + 
-	geom_joy(data = df.test, aes(x = EDOY, y = climDiverg, fill = diff, group = factor(climDiverg)), 
+	geom_density_ridges(data = df.test,
+										aes(x = EDOY, y = climDiverg, fill = diff, group = groups), 
 					 color = "white", alpha = 0.7,
 					 lwd = 0.5,
-					 scale = 2, show.legend = T, bandwidth = 10) + 
+					 scale = 2, show.legend = T, bandwidth = 10,
+					 panel_scaling = F) + 
 	theme_tufte() +
 	xlim(-80, 300) +
 	labs(x = "Day of Year", y = "Climate Divergence", fill = "Mismatch \n (days)") + 
@@ -246,31 +247,50 @@ ggsave(filename = "./drafts/distributions.pdf", device = "pdf", width = 7.5, hei
 
 
 #Estuary Arrivals/Blooms Over Time.
-time = estuary %>% left_join(., climate, by = c("geolocid"="id1", "year"="yearAdj")) %>% 
+estuary = estuary %>% left_join(., climate, by = c("geolocid"="id1", "year"="yearAdj")) %>% 
 	mutate(region = if_else(climDiverg<15, "lower",
 													if_else(climDiverg<24.5 & climDiverg>15, "interior",
 																	if_else(climDiverg<28.9 & climDiverg> 24.5, "transition","cold"))),
 				 yearAdj = if_else(region == "lower", year + 1.1,
 				 									if_else(region == "interior", year + 1.2,
-				 													if_else(region == "transition", year + 1.3, year+1.4)))) %>% 
-	group_by(region, year) %>% 
+				 													if_else(region == "transition", year + 1.3, year+1.4))),
+				 doy = yday(arriveDate)) 
+
+time = estuary %>% group_by(region, year) %>% 
 	summarise(yearAdj = unique(yearAdj),
 						ModeA = getmode(yday(arriveDate)), 
 						upperQ = quantile(yday(arriveDate), 0.75, na.rm = T),
 						lowerQ = quantile(yday(arriveDate), 0.25, na.rm = T),
 						ClimateD = mean(climDiverg))
-
 temp = phyto %>% select(1,3) %>% rename(yearAdj = Year, ModeA = bloom) %>% mutate(ModeA = ModeA + 14, region = "estuary", upperQ = ModeA+15, lowerQ = ModeA-15, ClimateD = 0) %>% bind_rows(time, .)
 
-temp %>% filter(region !="cold" & region != "transition") %>% 
-	ggplot(., aes(yearAdj, ModeA, color = ClimateD, shape = region)) + 
-	geom_point() + geom_errorbar(aes(x = yearAdj, ymin = lowerQ, ymax = upperQ)) + xlim(1970,2011) +
-	scale_color_viridis(option = "plasma") + 
-	theme_tufte(ticks = T) + 
+
+
+estuaryP = temp %>% filter(region == "estuary")
+lower = estuary %>% filter(region == "lower")
+interior = estuary %>% filter(region == "interior")
+
+p = ggplot() +
+	stat_smooth(data = estuaryP, aes(yearAdj, lowerQ), method = "loess", se = F, span = 0.1, col = "white") +
+	stat_smooth(data = estuaryP, aes(yearAdj, upperQ), method = "loess", se = F, span = 0.1, col = "white")
+
+pp = ggplot_build(p)
+estuaryP2 = data.frame(yearAdj = pp$data[[1]]$x,
+					 lowerQ = pp$data[[1]]$y,
+					 upperQ = pp$data[[2]]$y)
+p + geom_ribbon(data = estuaryP2, aes(x = yearAdj, ymin = lowerQ, ymax = upperQ),
+								fill = "grey", alpha = 0.5) +
+	geom_violin(data = lower, aes(x = year+1, y = doy, group = year), 
+							colour = "#ffffff99", fill = "#f9e161", alpha = 0.7, size = 0.2, width = 0.5) + 
+	geom_violin(data = interior, aes(x = year+1.3, y = doy, group = year), 
+							colour = "#ffffff99", fill = "#391d50", alpha = 0.7, size = 0.2, width = 0.5) + 
+	ylim(40, 190) + xlim(1967.5,2010.6) +
+	theme_tufte(tick = T) +
 	theme(legend.title.align = 0.5,
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"),
 			legend.box = "vertical") + 
-	labs(x = "Year", y = "Day of Year", color = "Climate\nDivergence", shape = "Region")
-ggsave(filename = "./drafts/sequence.pdf", device = "pdf", width = 7.5, height = 4, units = "in")
+	labs(x = "Year", y = "Day of Year")
+
+ggsave(filename = "./drafts/sequence.pdf", device = "pdf", width = 8, height = 2, units = "in")
