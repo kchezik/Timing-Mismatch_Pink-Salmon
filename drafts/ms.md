@@ -4,13 +4,12 @@
 
 \linenumbers
 
-#Abstract
-
+# Abstract
 *Message Box*
 
 There is growing evidence that climate change is driving phenological shifts and disrupting species interactions. However, climate is changing unevenly over space leaving migrating animals particularly vulnerable. As migration distance increases so do the opportunities for mismatch between inter-dependent species, which suggests the spatial structuring of populations influences vulnerability to phenological mismatch. Here we demonstrate spatial structuring of phenological asynchrony in a migratory fish.
 
-#Introduction
+# Introduction
 
 Climate change is disrupting the phenological synchrony of ecological interactions. As global temperatures rise many species are moving towards the poles and shifting the timing of life history events towards cooler seasonal temperatures [@Parmesan:2003; @Root:2003]. For instance, of the 677 species assessed by @Parmesan:2003, 71\% demonstrated shifting phenologies with 87\% of those exhibiting advanced spring life history events. Despite generally coherent directional shifts in phenology among species the magnitude of change has been variable [@Thackeray:2010; @Thackeray:2016]. Incoherent magnitude shifts in phenology increases the opportunity for mismatch between inter-dependent species such as predators and their prey [@Cushing:1990; @Durant:2005].
 
@@ -20,16 +19,17 @@ Juvenile salmon survival depends on synchronizing estuary arrival with the zoopl
 
 Climate mismatch is causing population-level effects in migratory salmon. For instance, @Otero:2014 found Atlantic salmon are outmigrating on average 2.5 days earlier per-decade since 1960 in the North Atlantic Ocean, similar to findings in the North Pacific where @Taylor:2008 observed Alaskan pink salmon outmigrating 5 days earlier per-decade since 1970. These shifts in smolt outmigration appear to be widespread among salmon species and suggest rapid microevolution [@Kovach:2012;@Kovach:2013], driven primarily by increasing air, river and ocean temperatures [@Taylor:2008]. Increasing sea surface temperatures are also shifting the timing [@Richardson:2008] and abundance [@Boyce:2010] of plankton blooms worldwide. Although zooplankton are reaching peak bloom earlier, bloom date has become more erratic and the rate of advance may not be keeping pace with shifting salmon outmigration [@Edwards:2004]. Tracking the inter-annual variation in plankton bloom in spite of divergent shifts in climate between local environments and the estuary will contribute to the future success and persistence of some populations over others [e.g., @Chittenden:2010, @Malick:2015]. Thus the climate driven phenological shifts of some salmon populations may be differently able to match climate driven phenological change in the ocean.
 
-Here we examine whether there is spatial structuring of phenological asynchrony in a migratory fish of economic, ecological and cultural importance. Locally adapted salmon populations spawn throughout vast river networks that integrate diverse climate variability [@Chezik:2017], however migrants from all populations face the common challenge of matching up with the plankton bloom of a common estuary. Here we ask whether populations closer to the estuary, with more correlative climates, track inter-annual variation in zooplankton bloom better than populations outmigrating from further upriver. Subsequently, we ask whether synchrony has changed over time and if these changes are spatial organized. By leveraging models that account for the river network spatial structure and propagating cumulative impacts over multiple life history events, we estimate match-mismatch potential for 64 sites over a 40 year period (1970-2010) within the largest salmon watershed in Canada.
+Here we examine whether there is spatial structuring of phenological asynchrony in a migratory fish of economic, ecological and cultural importance. Locally adapted salmon populations spawn throughout vast river networks that integrate diverse climate variability [@Chezik:2017], however migrants from all populations face the common challenge of matching up with the plankton bloom of a common estuary. Here we ask whether populations closer to the estuary, with more correlative climates, track inter-annual variation in zooplankton bloom better than populations outmigrating from further upriver. Subsequently, we ask whether synchrony has changed over time and if these changes are spatially organized. By leveraging models that account for the river network spatial structure and propagating cumulative impacts over multiple life history events, we estimate match-mismatch potential for 64 sites over a 40 year period (1970-2010) within the largest salmon watershed in Canada.
 
-#Materials and methods
+# Materials and methods
+
 *Study site*
 
 The Fraser River watershed drains approximately 217,000 km^2^ of diverse terrain and climate (Fig.$~\ref{fig:map}$). Originating in the western Cordillera of North America, the basin drains snow laden Canadian Rockies and Coastal Mountains. Converging and running down the dry central plateau of British Columbia, the river eventually crashes through the coastal mountains by way of Hells Gate canyon and spills into the Georgia Straight of the Pacific Ocean. We focus on the Fraser River watershed because the basin is large, topologically diverse, impacted by climate change [e.g., @Kang:2014; @Kang:2016; @Dery:2012; Schnorbus:2010; Shrestha:2012; Healey:2011] and home to five species of salmon. Funneling such a wide diversity of climate and divergent climate shifts to the same ocean outlet, the Fraser basin provides the necessary context for testing spatial match-mismatch patterns in salmon. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{./99_figures/ClimateMap.png}
+\includegraphics[width=6.5in]{./99_figures/01_ClimateMap.png}
 \caption{Fraser River watershed in British Columbia Canada, colored by the mean annual temperature in 1970 (left) and 2010 (right).}
 \label{fig:map}
 \end{figure}
@@ -40,68 +40,67 @@ Although most widely known for sockeye [@Eliason:2011], the Fraser River basin o
 
 *Emergence timing estimation*
 
-Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence. In order to account for temperature fluctuations in the natural environment we took a degree-day approach where the accumulation of thermal time since fertilization predicts the timing of emergence. This model is appealing because stream temperature data is widely available throughout the Fraser River basin. To described the relationship between thermal accumulation and days to emergence we used a linear regression model:
+Incubation temperatures dominate the rate of egg growth and development [@Murray:1986], such that if we understand the thermal environment we can predict emergence. In order to account for temperature fluctuations in the natural environment we took a degree-day approach where the accumulation of thermal time since fertilization predicts the timing of emergence. This model is appealing because stream temperature data is widely available throughout the Fraser River basin. To describe the relationship between thermal accumulation and days to emergence we used a linear regression model:
 
 \begin{linenomath*}
 \begin{equation}
-	\mathrm{E}_{s} = b + m\mathrm{CDD}_{T_{0},s} + \eta_{s}, \quad
-  \eta_{s} \sim \mathcal{N}(0, f(\mathrm{CDD}_{T_{0},s})) \label{eq1},
+	\mathrm{E}_{i} = b + m\mathrm{CDD}_{T_{0},i} + \eta_{i}, \quad
+  \eta_{i} \sim \mathcal{N}(0, f(\mathrm{CDD}_{T_{0},i})) \label{eq1},
 \end{equation}
 \end{linenomath*}
 
-where $\hat{E}_{s}$ represents the days to emergence at each observation ($s$) and $\mathrm{CDD}_{T_{0},s}$ represents cumulative degree days per observation ($s$) given a threshold temperature ($T$) of 0$\text{\textdegree}$C. We adjusted $\mathrm{CDD}_{T_{0},s}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
+where $\mathrm{E}_{i}$ represents the number of days to emergence at each observation ($i$) and $\mathrm{CDD}_{T_{0},i}$ represents cumulative degree days per observation ($i$) given a threshold temperature ($T$) of 0$\text{\textdegree}$C [@Chezik:2014a]. We adjusted $\mathrm{CDD}_{T_{0},i}$ by subtracting the mean $\mathrm{CDD}_{T_{0}}$, thereby centering our predictor. To ensure the number of days to emergence didn't extend beyond one year, we logit transformed $\mathrm{E}_{i}$ after scaling the data between 0 and 1 (i.e., dividing by 365). Fitted $m$ and $b$ parameters represent the mean effect of $\mathrm{CDD}_{T_{0}}$ on days to emergence and the mean number of days to emergence for the average number of $\mathrm{CDD}_{T_{0}}$, respectively. In order to allow for heteroskedasticity in the data we modified our error structure using an exponential variance function:
 
 \begin{linenomath*}
 \begin{equation}
-	f(\mathrm{CDD}_{T_{0},s}) = \sigma_E^2 \exp(2\updelta\mathrm{CDD}_{T_{0},s}) \label{eq2},
+	f(\mathrm{CDD}_{T_{0},i}) = \sigma_E^2 \exp(2\updelta\mathrm{CDD}_{T_{0},i}) \label{eq2},
 \end{equation}
 \end{linenomath*}
 
-where we allowed for the variance in our error ($\eta_{s}$) to decline with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameter. This model was fit using RStan 2.16.2 [@Stan:2017] in a bayesian framework using Hamiltonian Monte Carlo (HMC) sampling. We allowed four chains to burn in 8,000 iterations before sampling every third iteration 20,000 times, ensuring convergence among chains and independence between samples.
+where we allowed for the variance in our error ($\eta_{i}$) to increase with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameter. This model was fit using RStan 2.16.2 [@Stan:2017] in a bayesian framework using Hamiltonian Monte Carlo (HMC) sampling. We allowed four chains to burn in 4,000 iterations before sampling every third iteration 1,334 times, ensuring convergence among chains and independence between samples. We used weakly informative normally distributed priors centered around zero with standard deviations of 1, 0.5 and 1 for $b$, $m$ and $\updelta$ respectively.
 
 Data were gathered from studies that reported days to emergence during a controlled thermal regime. For instance, @Beacham:1986 incubated five stocks of fertillized pink salmon eggs at 4, 8 and 12$\text{\textdegree}$C and recorded the number of days to 50\% emergence. By multiplying the days to emergence by the incubation temperature and summing these values, we get an estimate for the cumulative number of degree-days to emergence for each population under differerent thermal regimes. Many studies incubated eggs at thermal constants [@Brannon:1987; @Beacham:1988a; @Beacham:1988b; @Murray:1988], while others used variable thermal regimes that mimic seasonal shifts [@Murray:1986; @Beacham:1987]. Temperature accumulation under variable thermal regimes were accounted for provided the details of each studies methods. Our literature search resulted in 104 estimates of cumulative degree-days and days to emergence for 20 populations in British Columbia, derived from seven studies.
 
 *Spawn Timing*
 
-Adult spawning timing dictates when thermal time begins accumulating, thereby acting as an adult control on fry emergence and jeuvenile estuary arrival timing. Therefore, we must account for spawn timing variation among populations and fluxuations and long-term trends within populations. Furthermore, stream temperature and spawning data are not always coincident in space and time. To account for variation in spawn timing and predict when spawning would occur in currently uninhabited locations, we built a stream network linear mixed effects model:  
+Spawn timing determines when thermal time begins accumulating thereby acting as an adult control on fry emergence and subsequently jeuvenile estuary arrival timing. Therefore, we must know when spawning occurred in order to estimate emergence. Unfortunately, spawn timing observations are not always coincident in time and space with recorded water temperature records. In order to predict when spawning would occur where water temperature data are available, we built a stream network linear mixed effects model (SSNM):
  
 \begin{linenomath*}
 \begin{equation}
-\hat{S}_{s,t} = \mathrm{X}\beta + \epsilon, \quad
+\mathrm{S}_{s,t} = \mathrm{X}\beta + \epsilon, \quad
 \epsilon \sim \mathrm{z}_{d} + \mathrm{z}_{y} + \mathrm{z}_{s} + \mathrm{z}_{nug} \label{eq3},
 \end{equation}
 \end{linenomath*}
 
-where spawn date $\hat{S}$ at site ($\mathrm{s}$) in year ($\mathrm{t}$) is predicted by a matrix of climate and landscape variables $\mathrm{X}$, where the relationship between spawn date and these predictors are described by a vector of $\beta$ coefficients. Residual error ($\epsilon$) is decomposed into multiple random effects ($\mathrm{z}$) to capture the spatial autocovariance between populations. A "tail-down" autocovariance model ($\mathrm{z}_{d}$) describes the relationship among flow unconnected locations along the river network [@Ver:2010]. We used year ($\mathrm{z}_{y}$) and site ($\mathrm{z}_{s}$) identifiers as random effects to account for year specific variation common across sites and repeated measures at individual sites respectively. The remaining independent and random error is captured in $\mathrm{z}_{nug}$.
+where spawn date $\mathrm{S}$ at site ($\mathrm{s}$) in year ($\mathrm{t}$) is predicted by a matrix of climate and landscape variables $\mathrm{X}$, where the relationship between spawn date and these predictors are described by a vector of $\beta$ coefficients. Residual error ($\epsilon$) is decomposed into multiple random effects ($\mathrm{z}$) to capture the spatial autocovariance between populations. A "tail-down" autocovariance model ($\mathrm{z}_{d}$) describes the relationship among flow unconnected locations along the river network [@Ver:2010]. We used year ($\mathrm{z}_{y}$) and site ($\mathrm{z}_{s}$) identifiers as random effects to account for year specific variation common across sites and repeated measures at individual sites respectively. The remaining independent and random error is captured in $\mathrm{z}_{nug}$.
 
-Spawn timing data were obtained from the nuSEDS database owned and maintained by the Canadian Department of Fisheries and Oceans (DFO). We selected pink salmon observations from throughout British Columbia that included an estimate of the begining and peak spawn date. To capture variation in spawn timing we assumed the spawning period to be well approximated by a normal distribution and sampled from distributions for each site and year. Standard deviation ($\sigma$) estimates for each distribution were approximated by searching over a variety of $\sigma$ values and selecting the value whose difference between the mean and 99th percentile best approximated the observed difference between start and peak spawn dates. We sampled distributions 22 times for each of the 379 unique site-year combinations, resulting in 8734 spawn date estimates at 64 locations between 1957 and 1998. We limited our sub-sampling to reduce computational complexity and improve model fit times [@Ver:2014].
+Spawn timing data were obtained from the nuSEDS database owned and maintained by the Canadian Department of Fisheries and Oceans (DFO). We selected pink salmon observations from throughout British Columbia that included an estimate of the begining and peak spawn date. To capture variation in spawn timing we assumed the spawning period to be well approximated by a normal distribution and sampled distributions for each site and year. Standard deviation (sd) estimates describing each distribution were approximated by searching for a value where the 99 and 50th percentile closely described the start and peak spawn dates. We sampled these distributions 22 times for each of the 379 unique site-year combinations, resulting in 8734 spawn date estimates at 64 locations between 1957 and 1998. We limited our sub-sampling to reduce computational complexity and improve model fit times [@Ver:2014].
 
-Temperature has been loosely connected with spawn timing in pink salmon [@Groot:1991] and may contribute to genetic controls on spawning and egg development [@Hebert:1998; @Smoker:1998]. To account for temperature on spawn timing we used Climate WNA [@Wang:2016] to estimate mean fall (September - October) and winter (November - February) air temperature as well as mean fall precipitation at observation and prediction sites. We also included elevation to act as a relative estimate of migration distance and to account for topographic interactions with precipitation.
+Temperature has been loosely connected with spawn timing in pink salmon [@Groot:1991] and may contribute to genetic controls on spawning and egg development [@Hebert:1998; @Smoker:1998]. To account for temperature on spawn timing we used Climate WNA [@Wang:2016] to estimate mean fall (September - October) and winter (November - February) air temperature as well as mean fall precipitation at observed and prediction sites. We also included elevation to act as a relative estimate of migration distance and to account for topographic interactions with precipitation.
 
-We chose a stream network model in part because pink salmon have only recently recolonized much of their historic range and in part because pink salmon have a strong straying tendency relative to other salmon species [@Pess:2012]. Therefore we expect populations that are closer together along the river network will share more genetic information and respond more similarly to abiotic drivers than populations further apart. Acounting for network spatial relationships offers a way of directly addressing straying behaviour thereby reducing uncertainty in our spawn timing predictions.
+We chose a stream network model in part because pink salmon have only recently recolonized much of their historic range and in part because pink salmon have a strong straying tendency relative to other salmon species [@Pess:2012]. Therefore we expect populations that are closer together along the river network to share more genetic information and respond more similarly to abiotic drivers than populations further apart. Acounting for network spatial relationships offers a way of directly addressing straying behaviour thereby reducing uncertainty in our spawn timing predictions.
 
 *Emergence & arrival timing estimation*
 
-Pink salmon emergence varies within and among populations. To capture parental and developmental contributions to variation in emergence timing we propogated error from our spawn timing model (e.g., eq.$\ref{eq3}$) to our emergence model (e.g., eq.$\ref{eq1}$). Defined by our spawn timing model's predicted mean spawn date and standard error estimates, we sampled prediction site t-distributions 1000 times, thereby capturing model uncertainty. Using these spawn date estimates, we then accumulated degree-days ($\mathrm{CDD}_{T_{0},s}$) and days to emergence, calculating the probability of emergence each day. 
+Pink salmon emergence varies within and among populations. To capture parental and developmental contributions to variation in emergence timing we propogated error from our spawn timing model (eq.$\ref{eq3}$) to our emergence model (eq.$\ref{eq1}$). Defined by our spawn timing model's predicted mean spawn date and standard error estimates, we sampled prediction site t-distributions 1000 times, thereby capturing model uncertainty. Using these spawn date estimates, we then accumulated degree-days ($\mathrm{CDD}_{T_{0},s}$) and days to emergence, calculating the probability of emergence each day. 
 
-Thermal accumulation ($\mathrm{CDD}_{T_{0},s}$) was calculated by summing water temperatures greater than zero. Water temperature data were extracted from the Fraser River Freshwater Temperature Database. This database contains freshwater temperature data collected througout the Fraser River basin by multiple agencies and is maintained by DFO. Emergence probability was calculated by estimating $\hat{E}_s$ given all posterior coefficient estimates of equation $\ref{eq1}$ and calculating the proportion less than or equal to the observed number of days of incubation. We retained emergence date estimates where the probability of emergence was greater than zero and less than one. 
+Thermal accumulation ($\mathrm{CDD}_{T_{0},s}$) was calculated by summing water temperatures greater than zero. Water temperature data were extracted from the Fraser River Freshwater Temperature Database. This database contains freshwater temperature data collected througout the Fraser River basin by multiple agencies and is maintained by DFO. Emergence probability was calculated by estimating $\mathrm{E}_s$ given posterior coefficient estimates of equation $\ref{eq1}$ and calculating the proportion less than or equal to the observed number of days of incubation. We retained emergence date estimates where the probability of emergence was greater than zero and less than one. 
 
-Immediate outmigration makes estuary arrival timing largely a function of emergence timing and river distance [@Neave:1966]. We applied a time constant to the emergence date which was linearly scaled by river distance from the estuary, where the furthest locations took two days. This entire process resulted in distributions of estuary arrival dates for each site and year water temperature data was available. 
-
+Immediate outmigration makes estuary arrival timing largely a function of emergence timing and river distance [@Neave:1966]. To estimate travel time between each population and the estuary we  divided river distance by flow velocity at the time of emergence. Velocity was calculated by dividing discharge by the product of the rivers width and depth. Discharge and depth estimates were gathered from a flow gauge station in Hope, British Columbia, which is maintained by Environment Canada and made available in the HYDAT database. To estimate river width we used the statistically derived relationships between discharge, depth and width described in @Moody:2002. We adjusted the intercept parameter that describes the relationship between flow and depth from a mean estimate of 0.27 to 0.52, well within the 95% CI range (0.12-0.63), in order ensure unknown depth estimates agreed with the observed flow to depth relationship. Time was estimated in days and added to the day of emergence, resulting in distributions of estuary arrival dates for each site and year water temperature data was available.
 
 *Zooplankton bloom, match-mismatch and climate divergence*
 
-The ultimate food source of juvenile salmon in the estuary are zooplankton, thus to determine if our arrival timing estimates match food availability we need to know when past zooplankton abundances peaked. @Allen:2013 developed a model of phytoplankton bloom estimates in the Georgia Straight initialized with *in situ* observations, predicted by physical and biological observations.Using these modeled bloom date estimates and standard deviations, we projected zooplankton bloom distributions for each year.
+Zooplankton are the the ultimate food source of juvenile salmon in the estuary. To determine if our arrival timing estimates coincide with food availability we need to know when past zooplankton abundances peaked. @Allen:2013 developed a model of phytoplankton bloom estimates in the Georgia Straight initialized with *in situ* observations and predicted by physical and biological observations. Using these modeled bloom date estimates and standard deviations, we estimated zooplankton bloom distributions for each year from 1968 to 2010.
 
 Zooplankton blooms are less defined by a single period but rather a punctuated series of blooms. To optimally benefit, salmon should arrive during the initial zooplankton bloom and feed across subsequent blooms. Because zooplankton feed on phytoplankton we approximated zooplankton bloom by applying a constant two week time lag to phytoplankton peak bloom date estimates [e.g., @Chittenden:2010]. A zooplankton bloom window, capturing uncertainty in the phytoplankton model, was calculated by multiplying the standard deviation estimate by three. This 30 day zooplankton bloom window captures 99.6% of the variability around the mean estimate.
 
-To quantify match-mismatch between zooplankton bloom and pink salmon estuary arrival, we calculated the proportion of estimated arrival dates that coincide within the window of zooplankton bloom for a given year. Populations and years with greater overlap demonstrate greater opportunities for growth and survival. 
+To quantify phenological match-mismatch between zooplankton bloom and pink salmon estuary arrival, we calculated the proportion of estimated arrival dates that coincide within the window of zooplankton bloom for a given year. Populations and years with greater overlap demonstrate greater opportunities for growth and survival. 
 
 Ultimately, we wish to test whether correlative climates between natal streams and the estuary is predictive of match-mismatch. To quantify how well climates across the basin track the estuary we developed a relative measure of climatic dissimilarity in each year between each site and the estuary. Our index consists of calculating the absolute difference in temperature (mean, minimum, maximum) and precipitation (mean) between the estuary and each site, in each month of each year. We then standardized these four climatic measures of similarity between zero and one for each spawn year and summed those standardized differences within each site and year. A spawn year spanned between July-01 and June-30 of the subsequent year, capturing direct impacts of climate on developing pink salmon embryos. The smaller the index value the greater the similarity between the estuary and the spawn site. Using these index values, we evaluate the relationship between climate similarity and pink salmon estuary arrival match-mismatch.
 
 *Spatial structure of phenological match-mismatch*
 
-Climate change is shifting the correlation structure of climate over space, therefore we expect the spatial stucture of phenological mismatch to shift as well. To describe underlying trends and the spatial structure of timing mismatch we fit a SSNM where:
+Climate change is shifting the correlation structure of climate over space, therefore we expect the spatial stucture of phenological mismatch to shift as well. To describe underlying trends and the spatial structure of timing mismatch we fit a SSNM:
 
 \begin{linenomath*}
 \begin{equation}
@@ -110,11 +109,53 @@ Climate change is shifting the correlation structure of climate over space, ther
 \end{equation}
 \end{linenomath*}
 
-we explained observed overlap between juvenile estuary arrival and zooplankton bloom $\mathrm{P}_{s,t}$ given each populations natal stream climate dissimilarity $\mathrm{CD}_{s,t}$ with the estuary. Similar to equation $\ref{eq3}$ our model includes random effects to account for year effects ($\mathrm{z}_{y}$) and the autocovariance among sites in the "tail-up" or flow-connected direction ($\mathrm{z}_{u}$), with remaining error ($\mathrm{z}_{nug}$) assummed to be independant and random. We logit transformed our overlap observations ($\mathrm{P}$) in order to bound the data between 0 and 1. Using this model we predicted overlap given climate divergence at regular intervals along the entire network therby describing the mean effect between 1970 and 2010. Moreover, to describe mean change in overlap during this period we took the difference between our most extreme years prediction networks. 
+where we explained observed overlap between juvenile estuary arrival and zooplankton bloom $\mathrm{P}_{s,t}$ given each populations natal stream climate dissimilarity $\mathrm{CD}_{s,t}$ with the estuary. Similar to equation $\ref{eq3}$ our model includes random effects to account for year effects ($\mathrm{z}_{y}$) and the autocovariance among sites in the "tail-up" or flow-connected direction ($\mathrm{z}_{u}$), with remaining error ($\mathrm{z}_{nug}$) assummed to be independant and random. We logit transformed our overlap observations ($\mathrm{P}$) in order to bound the data between 0 and 1. Using this model we predicted overlap given climate divergence at regular intervals along the entire network therby describing the mean effect between 1970 and 2010. Moreover, to describe mean change in overlap during this period we took the difference between our prediction networks. 
 
-#Results
+# Results
 
-#Discussion
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.25in]{./99_figures/02_SpawnMap.png}
+\caption{Fraser River pink salmon spawning locations, timing and projected shifts. Points indicate locations of observed pink salmon spawning colored by the median spawn date across years. The Fraser River network is colored by the mean predicted shift in spawn date between 1970 and 2010 given our SSNM described in equation \ref{eq3}.}
+\label{fig:spawn}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=4.25in]{./99_figures/03_EmergMod.pdf}
+\caption{Days to emergence given the cumulative degree-days since fertilization. Points represent observation estimates derived from published studies. The data were fit to equation 1 and the dotted line describes the decline in days to emergence with increasing cumulative degree-days. The solid lines indicate the variance estimates around the mean given the posterior disribution of $\eta$.}
+\label{fig:emerg}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/04_mismatch.pdf}
+\caption{Change in overlap between the zooplankton bloom and the estuary arrival of jeuvenile pink salmon with increasing climate divergence between natal streams and the estuary. Points are colored by the river distance to the estuary and describe the overlap and climate divergence estimates for each population in each year data were available.}
+\label{fig:mismatch}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/05_distributions.pdf}
+\caption{Pink salmon estuary arrival timing distribution estimates overlayed onto zooplankton bloom date estimates between 1970 and 2010 stratified by the divergence in climate between each populations natal stream and the estuary.}
+\label{fig:distrib}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/06_sequence.pdf}
+\caption{}
+\label{fig:distrib}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/07_ChangeOverlap.png}
+\caption{}
+\label{fig:distrib}
+\end{figure}
+
+# Discussion
 
 *Spatial structure of spawn timing shifts*
 
@@ -128,4 +169,4 @@ Similarly, depending predominately on evolutionary adaptation may make keeping p
 
 -->
 
-#References
+# References
