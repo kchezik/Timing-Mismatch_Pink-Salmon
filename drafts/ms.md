@@ -63,7 +63,7 @@ Data were gathered from studies that reported days to emergence during a control
 
 *Spawn Timing*
 
-Spawn timing determines when thermal time begins accumulating thereby acting as an adult control on fry emergence and subsequently jeuvenile estuary arrival timing. Therefore, we must know when spawning occurred in order to estimate emergence. Unfortunately, spawn timing observations are not always coincident in time and space with recorded water temperature records. In order to predict when spawning would occur where water temperature data are available, we built a stream network linear mixed effects model (SSNM):
+Spawn timing determines when thermal time begins accumulating thereby acting as an adult control on fry emergence and subsequently jeuvenile estuary arrival timing. Therefore, we must know when spawning occurred in order to estimate emergence. Unfortunately, spawn timing observations are not always coincident in time and space with recorded water temperature records. In order to predict when spawning would occur where water temperature data are available, we built a spatial statistical stream-network linear mixed effects model (SSNM):
  
 \begin{linenomath*}
 \begin{equation}
@@ -113,7 +113,11 @@ where we explained observed overlap between juvenile estuary arrival and zooplan
 
 # Results
 
+*Spawn Timing SSNM*
 
+Our spawn timing SSNM suggests populations closer on the network share more similar spawn timing than those further apart but populations upstream or in flow-unconnected locations appear more similar than those of similar or greater distance apart in the downstream and flow-connected direction. Although a Torgegram [@Ver:2014] suggests mixed evidence for flow-connected, -unconnected and linear autocorrelation (Sup. Figure 1), when compared in an AIC framework the flow-unconnected network correlation structure outcompetes all other auto-correlation structures and their combinations. Overall the random effects captured nearly all of the variation in spawn timing with $\mathrm{z}_{d}$, $\mathrm{z}_{y}$, $\mathrm{z}_{s}$ and $\mathrm{z}_{nug}$, accounting for 51, 10, 17 and 22% of the observed variation, while the climate and landscape covariates captured less than 1%. The weak evidence for abiotic drivers of spawn timing in pink salmon are similar to previous attempts to link spawn timing to temperature and flow [@Neave:1966; @Groot:1991]. Leave-one-out cross validation prediction standard error was approximately 10 days across sites and years (Sup. Figure 2), suggesting the model reasonably captures the variation in our data with no notable outliers although significant uncertainty remains. 
+
+Spawn timing predictions and shifts from 1970 to 2010 are largely spatially structured by climatic zones (Figure $\ref{fig:spawn}$) (Sup. Figure 3). Observed spawn dates were observed to be earlier at higher latitudes than lower latitudes, corroborating understood patterns in the Fraser River basin [@Neave:1966]. Interestingly our model suggests spatially explicit shifts in spawn timing where northern and western populations are predicted to have experienced limited changes in spawn timing over this 40 year period while populations in the southeast may be experiencing shifts by as much as two weeks. Given our prediction standard error of 10 days, none of these changes are significantly different from zero.
 
 \begin{figure}[H]
 \centering
@@ -121,6 +125,8 @@ where we explained observed overlap between juvenile estuary arrival and zooplan
 \caption{Fraser River pink salmon spawning locations, timing and projected shifts. Points indicate locations of observed pink salmon spawning colored by the median spawn date across years. The Fraser River network is colored by the mean predicted shift in spawn date between 1970 and 2010 given our SSNM described in equation \ref{eq3}.}
 \label{fig:spawn}
 \end{figure}
+
+*Emergence DD-Model*
 
 \begin{figure}[H]
 \centering

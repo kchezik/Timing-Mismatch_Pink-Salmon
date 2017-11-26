@@ -160,7 +160,8 @@ plyr::ldply(.data = ll.model.set, .fun = function(x){
 #I also looked into adding a linear covariance structure but that didn't add anything to the model either.
 
 #Look at the residuals spatially and as a distribution.
-mod <- glmssn(peak ~ F_tave + W_tmin + logF_ppt*elevation, ssn.object = network, family = "Gaussian", CorModels = c("geolocid", "year","Exponential.taildown"), addfunccol = "afvArea")
+mod <- glmssn(peak ~ F_tave + W_tmin + logF_ppt*elevation, ssn.object = network, family = "Gaussian", CorModels = c("geolocid", "year","Exponential.taildown"), addfunccol = "afvArea", EstMeth = "ML")
+
 mod.resid = residuals(mod)
 plot(mod.resid)
 hist(mod.resid)
@@ -200,7 +201,7 @@ plot( na.omit( getSSNdata.frame(network)[, "peak"]),
 
 #Show how much of the variation in the data is captured by each part of the model. The nugget is contibuting quite a lot.
 GR2(mod)
-varcomp(mod)
+VC = varcomp(mod)
 
 #Prediction
 mod_pred <- predict.glmssn(object = mod, predpointsID = "preds")
