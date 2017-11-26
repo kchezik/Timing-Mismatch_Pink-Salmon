@@ -56,19 +56,24 @@ depth = depth %>% do({
 						 depth = .$depth)
 })
 
-#Estimate width from known discharge power relationships (Moody & Troutman (2002)). 
-# I adjusted the exponent (from 0.5 to 0.48) to reduce the y-intercept. This adjustment was well within the 95% CI and brought the model estimate in line with our observed width (665m) and depth (10.8m). The slope is impossible to judge without more observed width data.
-flow = flow %>% mutate(width = 7.2*flow^0.48)
-ggplot(flow, (aes(depth, width))) + geom_point()
+#How do the paramters in the power law affect the intercept and slope.
+test = expand.grid(flow = seq(6000, 12000, by = 1000), alpha = seq(0.12, 0.63, by = 0.1), beta = seq(0.28, 0.32, by = 0.01))
+test = test %>% mutate(depth = alpha*flow^beta, group = paste(as.character(alpha), as.character(beta),sep = ""))
+ggplot(test, aes(flow, depth, color=alpha, group = group)) + geom_line() + facet_wrap(~beta)
 
 #Add depth to the flow data.
 flow = depth %>% mutate(Year = year(date)) %>% group_by(Year) %>% 
 	summarise(depth = max(depth, na.rm = T)) %>% left_join(flow,.,by=c("year" = "Year"))
 
 #Fill in unknown depth.
-# I adjusted the slope (c) parameter (from 0.27 to 0.52) to increase the depth estimate and bring it in line with our observed depth to discharge relationship. This adjustement is well within the 95% CI of the model.
+# I adjusted the intercept (c) parameter (from 0.27 to 0.52) to increase the depth estimate and bring it in line with our observed depth to discharge relationship. This adjustement is well within the 95% CI of the model.
 flow[is.na(flow$depth),"depth"] = 0.52*flow[is.na(flow$depth),"flow"]^0.3
 ggplot(flow, (aes(flow, depth))) + geom_point()
+
+#Estimate width from known discharge power relationships (Moody & Troutman (2002)). 
+flow = flow %>% mutate(width = 7.2*flow^0.50)
+ggplot(flow, (aes(depth, width))) + geom_point()
+
 
 #Add velocity in meters per day.
 flow = flow %>% mutate(vel = ((flow/(width*depth))*43200)/1000)

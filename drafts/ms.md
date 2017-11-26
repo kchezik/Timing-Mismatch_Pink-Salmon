@@ -113,6 +113,8 @@ where we explained observed overlap between juvenile estuary arrival and zooplan
 
 # Results
 
+
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=3.25in]{./99_figures/02_SpawnMap.png}
@@ -144,14 +146,14 @@ where we explained observed overlap between juvenile estuary arrival and zooplan
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/06_sequence.pdf}
-\caption{}
+\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (yellow) and above Hells Gate in the Thomspon and Nicola region (purple). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
 \label{fig:distrib}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/07_ChangeOverlap.png}
-\caption{}
+\caption{(\textbf{left}) Predicted percent estuary arrival overlap with the 2010 zooplankton bloom throughout the Fraser River basin. Open circles indicate locations of temperature monitoring and are colored by the estimated median percent overlap across available years. (\textbf{right}) The difference between predicted 1970 and 2010 percent overlap across the Fraser River basin given equation \ref{eq4}.}
 \label{fig:distrib}
 \end{figure}
 

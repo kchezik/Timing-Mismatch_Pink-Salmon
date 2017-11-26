@@ -4,7 +4,7 @@ data {
 	vector[N] y; // Response: Days bound between 0 and 365.
 }
 parameters {
-	real b0; // Intercept: Bound by 0 and 365.
+	real b0; // Intercept: Bound between 0 and 365.
 	real b1; // Slope.
 	real<lower=0> sigma; // Standard deviation: Not less than zero.
 	real tau; // Exponential parameter.

@@ -267,9 +267,31 @@ temp = phyto %>% select(1,3) %>% rename(yearAdj = Year, ModeA = bloom) %>% mutat
 
 
 estuaryP = temp %>% filter(region == "estuary")
+extend = data.frame(year = sort(c(1968:2010-0.5, 1968:2010, 1968:2010+0.5)), 
+					 yearAdj = sort(rep(seq(1968, 2010, by = 1), 3)))
+estuaryP = estuaryP %>% select(-year) %>% left_join(extend,.)
+
 lower = estuary %>% filter(region == "lower")
 interior = estuary %>% filter(region == "interior")
 
+#Ribbon-boxed zooplankton window.
+p = ggplot() + 
+	geom_ribbon(data = estuaryP, aes(year, ymin = lowerQ, ymax = upperQ),
+								fill = "grey", alpha = 0.5) +
+	geom_violin(data = lower, aes(x = year+0.75, y = doy, group = year), 
+							colour = "#ffffff99", fill = "#f9e161", alpha = 0.7, size = 0.2, width = 0.5) + 
+	geom_violin(data = interior, aes(x = year+1.25, y = doy, group = year), 
+							colour = "#ffffff99", fill = "#391d50", alpha = 0.7, size = 0.2, width = 0.5) + 
+	ylim(40, 190) + xlim(1967.5,2010.6) +
+	theme_tufte(tick = T) +
+	theme(legend.title.align = 0.5,
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"),
+			legend.box = "vertical") + 
+	labs(x = "Year", y = "Day of Year")
+
+#Smoothed zooplankton bloom alternative.
 p = ggplot() +
 	stat_smooth(data = estuaryP, aes(yearAdj, lowerQ), method = "loess", se = F, span = 0.1, col = "white") +
 	stat_smooth(data = estuaryP, aes(yearAdj, upperQ), method = "loess", se = F, span = 0.1, col = "white")
