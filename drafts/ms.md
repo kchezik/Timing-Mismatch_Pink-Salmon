@@ -115,9 +115,9 @@ where we explained observed overlap between juvenile estuary arrival and zooplan
 
 *Spawn Timing SSNM*
 
-Our spawn timing SSNM suggests populations closer on the network share more similar spawn timing than those further apart but populations upstream or in flow-unconnected locations appear more similar than those of similar or greater distance apart in the downstream and flow-connected direction. Although a Torgegram [@Ver:2014] suggests mixed evidence for flow-connected, -unconnected and linear autocorrelation (Sup. Figure 1), when compared in an AIC framework the flow-unconnected network correlation structure outcompetes all other auto-correlation structures and their combinations. Overall the random effects captured nearly all of the variation in spawn timing with $\mathrm{z}_{d}$, $\mathrm{z}_{y}$, $\mathrm{z}_{s}$ and $\mathrm{z}_{nug}$, accounting for 51, 10, 17 and 22% of the observed variation, while the climate and landscape covariates captured less than 1%. The weak evidence for abiotic drivers of spawn timing in pink salmon are similar to previous attempts to link spawn timing to temperature and flow [@Neave:1966; @Groot:1991]. Leave-one-out cross validation prediction standard error was approximately 10 days across sites and years (Sup. Figure 2), suggesting the model reasonably captures the variation in our data with no notable outliers although significant uncertainty remains. 
+Our spawn timing SSNM suggests populations closer on the network share more similar spawn timing than those further apart. Among similarly distant populations, those closer together along the network, regardless of connected flow, shared greater spawn timing similarity than those strictly sharing a flow path. Although a Torgegram [@Ver:2014] suggests mixed evidence for flow-connected, -unconnected and linear autocorrelation (Sup. Figure 1), when compared in an AIC framework the flow-unconnected network correlation structure outcompetes all other auto-correlation structures and their combinations. Overall the random effects captured nearly all of the variation in spawn timing with $\mathrm{z}_{d}$, $\mathrm{z}_{y}$, $\mathrm{z}_{s}$ and $\mathrm{z}_{nug}$, accounting for 51, 10, 17 and 22% of the observed variation, while the climate and landscape covariates captured less than 1%. The weak evidence for abiotic drivers of spawn timing in pink salmon reflect previous attempts to link spawn timing to temperature and flow [@Neave:1966; @Groot:1991]. Leave-one-out cross validation prediction standard error was approximately 10 days across sites and years (Sup. Figure 2), suggesting the model reasonably captures the variation in our data with no notable outliers or bias, although there remains significant uncertainty. 
 
-Spawn timing predictions and shifts from 1970 to 2010 are largely spatially structured by climatic zones (Figure $\ref{fig:spawn}$) (Sup. Figure 3). Observed spawn dates were observed to be earlier at higher latitudes than lower latitudes, corroborating understood patterns in the Fraser River basin [@Neave:1966]. Interestingly our model suggests spatially explicit shifts in spawn timing where northern and western populations are predicted to have experienced limited changes in spawn timing over this 40 year period while populations in the southeast may be experiencing shifts by as much as two weeks. Given our prediction standard error of 10 days, none of these changes are significantly different from zero.
+Spawn timing predictions and shifts from 1970 to 2010 are largely spatially structured by climatic zones (Figure $\ref{fig:spawn}$) (Sup. Figure 3). Spawn dates were observed to be earlier at higher latitudes than lower latitudes, corroborating understood and previously reported patterns in the Fraser River basin [@Neave:1966]. Interestingly our model suggests spatially explicit shifts in spawn timing where northern and western populations are predicted to have experienced limited changes in spawn timing over this 40 year period while populations in the southeast may be experiencing shifts by as much as two weeks. Given our prediction standard error of 10 days, none of these changes are significantly different from zero. Also, it is important to note that no populations currently inhabit the northern portion of the Fraser River basin, therefore those predictions are beyond the scope of the data.
 
 \begin{figure}[H]
 \centering
@@ -128,12 +128,35 @@ Spawn timing predictions and shifts from 1970 to 2010 are largely spatially stru
 
 *Emergence DD-Model*
 
+The requisite number of days between fertilization and emergence, declined with increasing cumulative degree-days (Figure $\ref{fig:emerg}$). Therefore, locations with warmer temperatures required more thermal time but fewer days to emerge than cooler environments. For instance, a population experiencing a constant 5$\text{\textdegree}$C incubation temperature is expected to emerge 173 days after fertilzation while a warmer 10$\text{\textdegree}$C location is expected to incubate for only 107 days before emerging. While the time it takes to emerge is nearly double at 5$\text{\textdegree}$C relative to 10$\text{\textdegree}$C, the number of cumulative degree-days is about 20% less, suggesting thermal time dominates but is not the only factor driving emergence.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=4.25in]{./99_figures/03_EmergMod.pdf}
 \caption{Days to emergence given the cumulative degree-days since fertilization. Points represent observation estimates derived from published studies. The data were fit to equation 1 and the dotted line describes the decline in days to emergence with increasing cumulative degree-days. The solid lines indicate the variance estimates around the mean given the posterior disribution of $\eta$.}
 \label{fig:emerg}
 \end{figure}
+
+*Estuary arrival, climate divergence and zooplankton bloom*
+
+As natal stream climate diverged from that of the estuary, pink salmon arrival distributions became increasingly more uniform with less of a defined peak arrival date (Figure $\ref{fig:distrib}$). Concurrently, arrival distributions tended to be increasingly left skewed, spread over a wider range of dates and arriving predominately after the zooplankton bloom. Conversely, populations with relatively small climate divergence values arrived in the estuary over a smaller range of dates, had a defined peak and were relatively well coincident with the zooplankton bloom. Overtime, inter-annual variation in zooplankton bloom has increased [@Allen:2013]. Although estuary arrival appears to adjust there is often an overcorrection or a broadening of the distribution towards more uniform arrival (Figure $\ref{fig:seq}$).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/05_distributions.pdf}
+\caption{Estimated distributions of pink salmon estuary arrival timing overlayed on zooplankton bloom date estimates between 1968 and 2010, stratified by each popualtions natal stream divergence in climate with the estuary. Distributions are colored by the number of days the most common estuary arrival date (i.e., Mode) missed the zooplankton bloom in the given year.}
+\label{fig:distrib}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/06_sequence.pdf}
+\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (yellow) and above Hells Gate in the Thomspon and Nicola region (purple). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
+\label{fig:seq}
+\end{figure}
+
+*Phenological match-mismatch*
 
 \begin{figure}[H]
 \centering
@@ -142,25 +165,12 @@ Spawn timing predictions and shifts from 1970 to 2010 are largely spatially stru
 \label{fig:mismatch}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.5in]{./99_figures/05_distributions.pdf}
-\caption{Pink salmon estuary arrival timing distribution estimates overlayed onto zooplankton bloom date estimates between 1970 and 2010 stratified by the divergence in climate between each populations natal stream and the estuary.}
-\label{fig:distrib}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.5in]{./99_figures/06_sequence.pdf}
-\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (yellow) and above Hells Gate in the Thomspon and Nicola region (purple). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
-\label{fig:distrib}
-\end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/07_ChangeOverlap.png}
 \caption{(\textbf{left}) Predicted percent estuary arrival overlap with the 2010 zooplankton bloom throughout the Fraser River basin. Open circles indicate locations of temperature monitoring and are colored by the estimated median percent overlap across available years. (\textbf{right}) The difference between predicted 1970 and 2010 percent overlap across the Fraser River basin given equation \ref{eq4}.}
-\label{fig:distrib}
+\label{fig:chgmatch}
 \end{figure}
 
 # Discussion
