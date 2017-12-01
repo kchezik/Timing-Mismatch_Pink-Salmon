@@ -160,7 +160,7 @@ plyr::ldply(.data = ll.model.set, .fun = function(x){
 #I also looked into adding a linear covariance structure but that didn't add anything to the model either.
 
 #Look at the residuals spatially and as a distribution.
-mod <- glmssn(peak ~ F_tave + W_tmin + logF_ppt*elevation, ssn.object = network, family = "Gaussian", CorModels = c("geolocid", "year","Exponential.taildown"), addfunccol = "afvArea", EstMeth = "ML")
+mod <- glmssn(peak ~ F_tave + W_tmin + logF_ppt*elevation, ssn.object = network, family = "Gaussian", CorModels = c("geolocid", "year","Exponential.taildown"), addfunccol = "afvArea", EstMeth = "REML")
 
 mod.resid = residuals(mod)
 plot(mod.resid)
