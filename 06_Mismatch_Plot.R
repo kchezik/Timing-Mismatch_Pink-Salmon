@@ -188,7 +188,6 @@ ggplot(mismatch, aes(climDiverg, perc, color = Rdist/1000)) + geom_jitter(height
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"))
-ggsave(path = "./drafts/", filename = "mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
 
 #Y-axis: values are positive when the Pinks enter the estuary after peak bloom.
 #X-axis: values describe increasingly disimilar climates from the estuary.

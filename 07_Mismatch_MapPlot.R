@@ -1,4 +1,5 @@
-library(tidyverse); library(SSN); library(MuMIn); library(attenPlot); library(rgdal) #Activate Libraries
+library(tidyverse); library(SSN); library(MuMIn); library(attenPlot); library(rgdal)
+library(viridis) #Activate Libraries
 #Read in the .ssn network data.
 network = importSSN("./02_SpawnTiming/lsn/sites_overlap.ssn", predpts = "BK_2010", o.write = F)
 
@@ -10,6 +11,7 @@ network = importPredpts(network, "BK_1970", obj.type = "ssn")
 
 #Read in updated percent overlap data.
 perc = readOGR(dsn = "./02_SpawnTiming/lsn/sites/", layer = "sites_overlap")
+names(perc)[1] = "geolocid"
 perc = perc@data %>% select(geolocid, year, perc)
 perc[which(perc$perc==0),"perc"] = 0.1
 logit = function(p){log(p/(1-p))}
@@ -91,8 +93,10 @@ mod.resid = residuals(mod)
 plot(mod.resid)
 hist(mod.resid)
 
+#Omited looking at the zero overlap site because I've looked into that site and either the temperature data are artificially cold or it was an oddly cool year.
 net = getSSNdata.frame(mod.resid)
-ggplot(net, aes(`_fit_`,`logitPerc`, color = `_CooksD_`)) +
+net %>% filter(`logitPerc`>-6) %>%
+ggplot(., aes(`_fit_`,`logitPerc`, color = `_CooksD_`)) +
 	geom_point() + 
 	geom_abline(intercept = 0, slope = 1) +
 	scale_color_gradient2(name = expression(frac("CooksD")), midpoint=0.05, low="#67A9CF", mid="#F2F2F2",
@@ -101,13 +105,63 @@ ggplot(net, aes(`_fit_`,`logitPerc`, color = `_CooksD_`)) +
 #Cross validation.
 cv.out = CrossValidationSSN(mod)
 par(mfrow = c(1, 2))
-plot(psych::logistic(mod$sampinfo$z),
-		 psych::logistic(cv.out[, "cv.pred"]), pch = 19,
+plot(boot::inv.logit(mod$sampinfo$z),
+		 boot::inv.logit(cv.out[, "cv.pred"]), pch = 19,
 		 xlab = "Observed Data", ylab = "LOOCV Prediction")
 abline(0, 1)
-plot( psych::logistic(na.omit( getSSNdata.frame(network)[, "logitPerc"])),
-			psych::logistic(cv.out[, "cv.se"]), pch = 19,
+plot( boot::inv.logit(net$logitPerc),
+			boot::inv.logit(net$logitPerc)-(boot::inv.logit(net$logitPerc - cv.out[, "cv.se"])), pch = 19,
 			xlab = "Observed Data", ylab = "LOOCV Prediction SE")
+
+#Summary 
+int = summary(mod)[[2]][[2]][1]
+intSE = summary(mod)[[2]][[3]][1]
+slope = summary(mod)[[2]][[2]][2]
+slopeSE = summary(mod)[[2]][[3]][2]
+
+df = data.frame(
+	perc = net$perc,
+	Rdist = net$upDist,
+	climDiverg = net$climDiverg,
+	overlap_Fit = boot::inv.logit(net$`_fit_`)*100,
+	lowerS = boot::inv.logit((int-2*intSE) + (slope-2*slopeSE)*net$climDiverg)*100,
+	upperS = boot::inv.logit((int+2*intSE) + (slope+2*slopeSE)*net$climDiverg)*100,
+	lower = boot::inv.logit((int-2*intSE) + slope*net$climDiverg)*100,
+	upper = boot::inv.logit((int+2*intSE) + slope*net$climDiverg)*100)
+
+ggplot(df) +
+	geom_line(aes(climDiverg, overlap_Fit), color = "black", alpha = 0.7) +
+	geom_jitter(aes(climDiverg, perc, color = Rdist/1000), 
+							height = 0.3, size = 2.25, alpha = 0.7) +
+	#geom_line(aes(climDiverg, lower), color = "black", lty = 2) + 
+	#geom_line(aes(climDiverg, upper), color = "black", lty = 2) + 
+	#geom_line(aes(climDiverg, lowerS), color = "black", lty = 2) + 
+	#geom_line(aes(climDiverg, upperS), color = "black", lty = 2) + 
+	scale_color_viridis(option = "plasma") + 
+	labs(x = "Climate Divergence", y = "Percent Overlap", color = "River\nDistance\n(km)") +
+	theme_tufte(ticks = T) + 
+	theme(legend.title.align = 0.5, legend.position = c(0.97,0.80), 
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"))
+ggsave(path = "./drafts/", filename = "mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+
+df = net %>% select(pid, climDiverg, perc, upDist) %>% 
+	left_join(., cv.out)
+
+ggplot(df) +
+	geom_jitter(aes(climDiverg, boot::inv.logit(cv.pred)*100), 
+							height = 0.3, size = 2.25, alpha = 0.7) +
+	geom_jitter(aes(climDiverg, perc, color = upDist/1000), 
+							height = 0.3, size = 2.25, alpha = 0.7) +
+	scale_color_viridis(option = "plasma") + 
+	labs(x = "Climate Divergence", y = "Percent Overlap", color = "River\nDistance\n(km)") +
+	theme_tufte(ticks = T) + 
+	theme(legend.title.align = 0.5, legend.position = c(0.97,0.80), 
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"))
+ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "05_mismatch_LOOCV.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
 
 ###################
 ### Predictions ###
