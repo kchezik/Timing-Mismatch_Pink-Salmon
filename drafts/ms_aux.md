@@ -4,10 +4,12 @@
 
 \linenumbers
 
+## Supplementary Figures
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/01_Spawn_Torgegram.pdf}
-\caption{Torgegram describing autocorrelation in spawn timing among flow connected and unconnected locations in the Fraser River basin where lower semivariance indicates lower autocorrelation. The size of the circles are proportional to the number of pairs binned in the given stream distance [@Ver:2014].}
+\caption{Torgegram describing autocorrelation in spawn timing among flow connected and unconnected locations in the Fraser River basin where lower semivariance indicates lower autocorrelation. The size of the circles are proportional to the number of pairs binned in the given stream distance (Hoef et al. 2014).}
 \label{fig:torg}
 \end{figure}
 
