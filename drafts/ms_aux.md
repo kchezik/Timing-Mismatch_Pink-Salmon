@@ -2,13 +2,11 @@
 % K. A. Chezik; S. M. Wilson; J. W. Moore
 % December 03, 2017
 
-\linenumbers
-
-## Supplementary Figures
+# Supplementary Figures
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{./99_figures/Aux_Figures/01_Spawn_Torgegram.pdf}
+\includegraphics[width=5.5in]{./99_figures/Aux_Figures/01_Spawn_Torgegram.pdf}
 \caption{Torgegram describing autocorrelation in spawn timing among flow connected and unconnected locations in the Fraser River basin where lower semivariance indicates lower autocorrelation. The size of the circles are proportional to the number of pairs binned in the given stream distance (Hoef et al. 2014).}
 \label{fig:torg}
 \end{figure}
@@ -22,7 +20,7 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6.5in]{./99_figures/Aux_Figures/03_SpawnRegions.png}
+\includegraphics[width=4.5in]{./99_figures/Aux_Figures/03_SpawnRegions.png}
 \caption{Climate regions by year among emergence timing prediction sites in the Fraser River basin in British Columbia Canada. Points (green) indicate temperature monitoring locations where emergence timing can be estimated. The ring around temperature monitoring locations are made up of climate divergence estimates (points) for each year between 1970 and 2010 colored by climate divergence groups. Four distinct climate divergence groups are estimated, located in the lower Fraser basin (white), the Nicola and Thompson region (turquoise), the central and northwest region (blue) and the west and northwest region (purple). Boundaries in among groups varies from year to year within edge sites. The river network is colored by mean climate group and watershed is colored by mean annual temperature across years.} 
 \label{fig:climate}
 \end{figure}
