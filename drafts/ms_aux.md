@@ -7,14 +7,14 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=5.5in]{./99_figures/Aux_Figures/01_Spawn_Torgegram.pdf}
-\caption{Torgegram describing autocorrelation in spawn timing among flow connected and unconnected locations in the Fraser River basin where lower semivariance indicates lower autocorrelation. The size of the circles are proportional to the number of pairs binned in the given stream distance (Hoef et al. 2014).}
+\caption{Torgegram describing autocorrelation in spawn timing among flow connected and unconnected locations in the Fraser River basin where lower semivariance indicates higher autocorrelation. The size of the circles are proportional to the number of pairs binned in the given stream distance (Hoef et al. 2014).}
 \label{fig:torg}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/02_SpawnLOOCV.pdf}
-\caption{*Left* Leave one out cross validation (LOOCV) given the observed spawn timing estimates (solid line 1:1). *Right* LOOCV prediction standard error estimate given the observed data.} 
+\caption{**Left** Leave one out cross validation (LOOCV) given the observed spawn timing estimates (solid line 1:1). **Right** LOOCV prediction standard error estimate given the observed data.} 
 \label{fig:SPLOOCV}
 \end{figure}
 
@@ -28,13 +28,13 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/04_MismatchLOOCV.pdf}
-\caption{*Left* Leave one out cross validation (LOOCV) given the observed overlap between estuary arrival and zooplankton bloom among sites and years in the Fraser River watershed in British Columbia Canada (solid line 1:1). *Right* LOOCV prediction standard error estimate given the observed data.} 
+\caption{**Left** Leave one out cross validation (LOOCV) given the observed overlap between estuary arrival and zooplankton bloom among sites and years in the Fraser River watershed in British Columbia Canada (solid line 1:1). **Right** LOOCV prediction standard error estimate given the observed data.} 
 \label{fig:MisMatchLOOCV}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/05_mismatch_LOOCV.pdf}
-\caption{Percent overlap between estuary arrival timing of pink salmon and the zooplankton bloom in the Fraser River estuary in the Straight of Georgia in British Columbia Canada. Colored points represent the observed estimates and are colored by the river distance between the natal stream. Black points represent prediction estimates given leave one out cross validation given equation 4 in the main text.} 
+\caption{Percent overlap between estuary arrival timing of pink salmon and the zooplankton bloom in the Fraser River estuary in the Straight of Georgia in British Columbia Canada. Colored points represent the observed estimates and are colored by the river distance between the natal stream and the estuary. Black points represent prediction estimates given leave one out cross validation given equation 4 in the main text.} 
 \label{fig:MisMatchLOOCV}
 \end{figure}

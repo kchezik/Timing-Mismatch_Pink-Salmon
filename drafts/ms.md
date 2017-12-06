@@ -180,11 +180,19 @@ On average phenological overlap is predicted to be greater as populations get cl
 
 # Discussion
 
-*Spatial structure of spawn timing shifts*
+*River network spatially stucturing*
 
-*Plasticity*
+River networks are the spatial scoffolding upon which environmental and subsequently life history patterns arise.
 
-*Evolutionary pressure*
+*Declining phenological match-mismatch signal*
+
+Climate signals that tune the coincidence of pink salmon estuary arrival with the zooplankton bloom deteriorates with distance and may be further distrupted with increasingly variable climate regimes.
+
+*Increasingly mediocre zooplankton tracking*
+
+As climate becomes increasingly variable, pink salmon populations throughout the Fraser River basin may increasingly track the zooplankton bloom more similarly and poorly. 
+
+
 
 <!--
 
