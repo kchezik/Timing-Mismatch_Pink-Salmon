@@ -139,21 +139,13 @@ The requisite number of days between fertilization and emergence declined with i
 
 *Estuary arrival, climate divergence and zooplankton bloom*
 
-As natal stream climate diverged from that of the estuary, pink salmon arrival distributions became increasingly uniform, such that each arrival day shared increasingly similar probability (Figure $\ref{fig:distrib}$). Concurrently, arrival distributions tended to be increasingly left skewed, spread over a wider range of dates and arriving predominately after the zooplankton bloom. Conversely, populations with relatively small climate divergence values arrived in the estuary over a smaller range of dates, had a defined peak and were relatively well coincident with the zooplankton blooms. Overtime, inter-annual variation in zooplankton bloom has increased [@Allen:2013]. Although estuary arrival appears to adjust, there is often an overcorrection or a broadening of the distribution towards more uniform arrival (Figure $\ref{fig:seq}$).
+As natal stream climate diverged from that of the estuary, pink salmon arrival distributions became increasingly uniform, such that each arrival day shared increasingly similar probability (Figure $\ref{fig:distrib}$). Concurrently, arrival distributions tended to be increasingly left skewed, spread over a wider range of dates and arriving predominately after the zooplankton bloom. Conversely, populations with relatively small climate divergence values arrived in the estuary over a smaller range of dates, had a defined peak and were relatively well coincident with the zooplankton blooms. Overtime, inter-annual variation in zooplankton bloom has increased [@Allen:2013]. Although estuary arrival appears to adjust, there is often an overcorrection or a broadening of the distribution towards more uniform arrival (Sup. Figure 6).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/05_distributions.pdf}
 \caption{Estimated distributions of pink salmon estuary arrival timing overlayed on zooplankton bloom date estimates between 1968 and 2010, stratified by each populations natal stream divergence in climate with the estuary. Distributions are colored by the number of days the most common estuary arrival date (i.e., Mode) missed the zooplankton bloom in the given year.}
 \label{fig:distrib}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.5in]{./99_figures/06_sequence.pdf}
-\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (yellow) and above Hells Gate in the Thompson and Nicola region (purple). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
-\label{fig:seq}
 \end{figure}
 
 *Phenological match-mismatch*

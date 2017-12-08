@@ -21,6 +21,11 @@ net <- getSSNdata.frame(network)
 names(net)[2] = "year"; net = net[-13];
 #Update percent overlap data.
 net = net %>% select(-perc) %>% left_join(.,perc, by = c("geolocid","year"))
+#Add correlation data to the predictors.
+cor = readOGR(dsn = "./maps/", layer = "ClimDiverg")
+names(cor)[1] = "geolocid"
+cor = cor@data %>% select(geolocid, yearAdj, cor)
+net = cor %>% left_join(net,., by = c("geolocid"="geolocid","year"="yearAdj"))
 #Change year and site id to factors.
 net[,"year"] <- as.factor(net[,"year"])
 net[,"geolocid"] <- as.factor(net[,"geolocid"])
@@ -65,9 +70,11 @@ climate = climate %>% mutate(season = if_else(month >= 7, "fall", "spring"))
 climate = climate %>% mutate(yearAdj = if_else(season == "fall", as.numeric(year), as.numeric(year)-1)) %>% arrange(geolocid, var, year, month) %>% filter(yearAdj > 1966, yearAdj < 2011)
 #Standardize the climate variables between 0-1.
 climate = climate %>% group_by(yearAdj, clim_var) %>% mutate(residSTD = zero_one(abs(resid)))
-#Accumulate standardized deviations from Estuary climate metrics.
-climate = climate %>% group_by(geolocid, yearAdj) %>% summarise(climDiverg = sum(residSTD)) %>% filter(yearAdj == 2009 | yearAdj == 1969)
-
+#Accumulate standardized deviations from Estuary climate metrics and correlation values.
+climate = climate %>% group_by(geolocid, yearAdj) %>%
+	summarise(climDiverg = sum(residSTD),
+						 cor = cor(clim_val, EstClimVal)) %>% 
+	filter(yearAdj == 2009 | yearAdj == 1969)
 
 #Add column to the prediction dataset describing the climate divergence from the estuary at each site.
 pred_net <- getSSNdata.frame(network, Name = "BK_2010")
@@ -85,7 +92,7 @@ network <- putSSNdata.frame(pred_net, network, Name = "BK_2010")
 createDistMat(network, predpts = "BK_2010", o.write = F, amongpreds = F)
 createDistMat(network, predpts = "BK_1970", o.write = F, amongpreds = F)
 
-#Model the percent overlap.
+#Model the percent overlap. Tested including correlation in the model but is outcompeted by a climate divergence only model.
 mod <- glmssn(logitPerc ~ climDiverg, ssn.object = network, family = "Gaussian", CorModels = c("year","Exponential.tailup"), addfunccol = "afvArea")
 
 #Look at residuals.

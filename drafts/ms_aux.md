@@ -31,10 +31,38 @@
 \caption{**Left** Leave one out cross validation (LOOCV) given the observed overlap between estuary arrival and zooplankton bloom among sites and years in the Fraser River watershed in British Columbia Canada (solid line 1:1). **Right** LOOCV prediction standard error estimate given the observed data.} 
 \label{fig:MisMatchLOOCV}
 \end{figure}
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=6.5in]{./99_figures/Aux_Figures/06_sequence.pdf}
+\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (yellow) and above Hells Gate in the Thompson and Nicola region (purple). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
+\label{fig:seq}
+\end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/05_mismatch_LOOCV.pdf}
 \caption{Percent overlap between estuary arrival timing of pink salmon and the zooplankton bloom in the Fraser River estuary in the Straight of Georgia in British Columbia Canada. Colored points represent the observed estimates and are colored by the river distance between the natal stream and the estuary. Black points represent prediction estimates given leave one out cross validation given equation 4 in the main text.} 
 \label{fig:MisMatchLOOCV}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/Aux_Figures/06_CorMismatch.pdf}
+\caption{}
+\label{fig:cor}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/Aux_Figures/07_DivMismatch.pdf}
+\caption{}
+\label{fig:div}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/Aux_Figures/08_PresAbs.pdf}
+\caption{}
+\label{fig:pa}
 \end{figure}

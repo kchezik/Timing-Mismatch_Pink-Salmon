@@ -71,7 +71,7 @@ estClim = estClim %>% gather(key = "clim_var", value = "EstClimVal", 6:53)
 climate = estClim %>% select(year, clim_var, EstClimVal) %>% left_join(preds, ., by = c("year","clim_var"))
 climate = climate %>% filter(year >= 1967, year <= 2011) %>%
 	mutate(resid = clim_val - EstClimVal) %>%
-	select(id1, year, clim_var, resid)
+	select(id1, year, clim_var, resid, clim_val, EstClimVal)
 #Add a month variable to the long dataset.
 climate = climate %>% do({
 	end = nchar(.[,3])
@@ -83,14 +83,16 @@ climate = climate %>% mutate(season = if_else(month >= 7, "fall", "spring"))
 #Adjust the year column so they span fall to spring rather than spring to fall.
 climate = climate %>% mutate(yearAdj = if_else(season == "fall", as.numeric(year), as.numeric(year)-1)) %>% arrange(id1, var, year, month) %>% filter(yearAdj > 1966, yearAdj < 2011)
 #Standardize the climate variables between 0-1.
-climate = climate %>% group_by(yearAdj, clim_var) %>% mutate(residSTD = zero_one(abs(resid)))
-#Accumulate standardized deviations from Estuary climate metrics.
-climate = climate %>% group_by(id1, yearAdj) %>% summarise(climDiverg = sum(residSTD))
-
+climate = climate %>% group_by(yearAdj, clim_var) %>%
+	mutate(residSTD = zero_one(abs(resid)))
+#Accumulate standardized deviations from Estuary climate metrics. Determine correlation for each year between the estuary and the temperature monitoring locations.
+climate = climate %>% group_by(id1, yearAdj) %>%
+	summarise(climDiverg = sum(residSTD),
+						cor = cor(clim_val, EstClimVal))
 #Output climate divergence to a shapefile.
 sp = preds %>% select(id1, latitude, longitude) %>% distinct() %>% left_join(climate, ., by = "id1")
 sp = data.frame(sp)
-sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c("id1","yearAdj","climDiverg")], proj4string = CRS("+init=epsg:4326"))
+sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c("id1","yearAdj","climDiverg","cor")], proj4string = CRS("+init=epsg:4326"))
 sp = spTransform(sp, CRS("+init=epsg:3005"))
 writeOGR(obj = sp, dsn = "./maps/", layer = "ClimDiverg", driver = "ESRI Shapefile", overwrite_layer = T)
 
@@ -161,6 +163,29 @@ mismatch = mismatch %>% mutate(region = if_else(climDiverg<15, 1,
 																								if_else(climDiverg<24.5 & climDiverg>15, 2,
 																												if_else(climDiverg<28.9 & climDiverg> 24.5, 2.5,3))))
 
+#Add presence absence to overlap location ...
+# indicating if pink salmon populations have been observed in the area.
+PA = read_csv(file = "./02_SpawnTiming/PresenceAbsence.csv")
+mismatch = mismatch %>% mutate(PresAbs = if_else(geolocid %in% PA$id1, 1, 0))
+
+ggplot(mismatch, aes(perc, PresAbs, color = climDiverg)) + 
+	geom_jitter(width = 2, height = 0) +
+	scale_color_viridis() +
+	geom_smooth(method = "glm", 
+							method.args = list(family = "binomial"), 
+							se = T, color = "darkgrey", lty = 2, lwd = 0.5, fill = "lightgrey") + 
+	geom_hline(yintercept = 0.5, lty = 3, color = "lightgrey") + 
+	geom_vline(xintercept = 19.9, lty = 3, color = "lightgrey") + 
+	labs(x = "Percent Overlap", y = "Pink Salmon Presence",
+			 color = "Climate\nDivergence") + 
+	theme_tufte(ticks = T) + 
+	theme(legend.title.align = 0.5, legend.position = c(0.93,0.70), 
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"))
+ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "08_PresAbs.pdf",
+			 device = "pdf", width = 7.5, height = 5, units = "in")
+
 #Output overlap/climate divergence data to a shapefile.
 sp = mismatch %>% filter(!is.na(diff)) %>% select(geolocid, year, diff, perc, perc_median, climDiverg, enso, pdo, latitude, longitude) %>% data.frame(.)
 sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c(1:7)], proj4string = CRS("+init=epsg:4326"))
@@ -168,7 +193,35 @@ sp = spTransform(sp, CRS("+init=epsg:3005"))
 writeOGR(obj = sp, dsn = "./02_SpawnTiming/lsn/sites/", layer = "sites_overlap", driver = "ESRI Shapefile", overwrite_layer = T)
 
 #Look for climatic clumping. Three distinct climatic regions with a transition zone.
-ggplot(mismatch, aes(climDiverg, group = region, color = as.factor(region), fill = as.factor(region))) + geom_density(adjust = 2,alpha = 0.5)
+p = ggplot(mismatch, aes(climDiverg, group = as.factor(region))) +
+	geom_density(adjust = 2)
+
+pp = ggplot_build(p)
+dens = data.frame(climDiverg = pp$data[[1]]$x,
+					 density = pp$data[[1]]$y*200,
+					 region = pp$data[[1]]$group)
+
+ggplot() + 
+	geom_ridgeline(data = dens, aes(x = climDiverg, y = rep(0, nrow(dens)), height = density,
+																	fill = as.factor(region)), color = "white", 
+								 alpha = 0.5, lwd = 0.5, show.legend = T) + 
+	geom_jitter(data = mismatch,
+							aes(climDiverg, perc, color = Rdist/1000), height = 0.3, size = 2.25, alpha = 0.7) +
+	scale_color_viridis(option = "plasma") + 
+	labs(x = "Climate Divergence", y = "Percent Overlap",
+			 color = "River Distance\n(km)", fill = "Climate Region") +
+	scale_fill_manual(values = c("#f4e76e","#f7fe72","#8ff7a7","#51bbfe"),
+										breaks = as.factor(c(1,2,3,4)),
+										labels = as.factor(c("Lower Fraser","Nicola &\nThompson",
+											 										 "Transition","Upper Fraser"))) + 
+	theme_tufte(ticks = T) + 
+	theme(legend.title.align = 0.5, legend.position = c(0.85,0.80), 
+				legend.box = "horizontal",
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"))
+ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "07_DivMismatch.pdf",
+			 device = "pdf", width = 7.5, height = 5, units = "in")
 
 #Plot the response variables against eachother. This gives strong evidence that our predictors are measuring match/mismatch...
 # ... because as the predicted arrival time diverges from the observed phytoplankton bloom, ...
@@ -180,7 +233,8 @@ ggplot(mismatch, aes(diff, perc, color = as.factor(region))) + geom_point() +
 ggplot(mismatch, aes(climDiverg, perc, color = as.factor(region))) + geom_point() + 
 		labs(x = "Climate Divergence", y = "Percent Overlap", color = "Climatic Region") + theme_light()
 
-ggplot(mismatch, aes(climDiverg, perc, color = Rdist/1000)) + geom_jitter(height = 0.3, size = 2.25, alpha = 0.7) +
+ggplot(mismatch) + 
+	geom_jitter(aes(climDiverg, perc, color = Rdist/1000), height = 0.3, size = 2.25, alpha = 0.7) +
 	scale_color_viridis(option = "plasma") + 
 	labs(x = "Climate Divergence", y = "Percent Overlap", color = "River\nDistance\n(km)") +
 	theme_tufte(ticks = T) + 
@@ -188,6 +242,24 @@ ggplot(mismatch, aes(climDiverg, perc, color = Rdist/1000)) + geom_jitter(height
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"))
+
+ggplot(mismatch, aes(cor, perc, color = Rdist/1000, shape = as.factor(region))) + 
+	geom_jitter(height = 0.3, size = 2.25, alpha = 0.7) +
+	scale_color_viridis(option = "plasma") + 
+	labs(x = "Climate Correlation", y = "Percent Overlap", 
+			 color = "River Distance\n(km)", shape = "Climate Region") +
+	scale_shape_discrete(breaks = as.factor(c(1,2,2.5,3)),
+											 labels = as.factor(c("Lower Fraser","Nicola &\nThompson",
+											 										 "Transition","Upper Fraser"))) + 
+	theme_tufte(ticks = T) + 
+	scale_x_reverse() +
+	theme(legend.title.align = 0.5, legend.position = c(0.85,0.80), 
+				legend.box = "horizontal",
+			plot.background = element_rect(fill = "transparent", colour = NA),
+			panel.background = element_rect(fill = "transparent", colour = NA),
+			axis.line = element_line(color="black"))
+ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "06_CorMismatch.pdf",
+			 device = "pdf", width = 7.5, height = 5, units = "in")
 
 #Y-axis: values are positive when the Pinks enter the estuary after peak bloom.
 #X-axis: values describe increasingly disimilar climates from the estuary.
