@@ -14,55 +14,55 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/02_SpawnLOOCV.pdf}
-\caption{**Left** Leave one out cross validation (LOOCV) given the observed spawn timing estimates (solid line 1:1). **Right** LOOCV prediction standard error estimate given the observed data.} 
+\caption{(\textbf{Left}) Leave one out cross validation (LOOCV) given the observed spawn timing estimates (solid line 1:1). (\textbf{Right}) LOOCV prediction standard error estimate given the observed data.} 
 \label{fig:SPLOOCV}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=4.5in]{./99_figures/Aux_Figures/03_SpawnRegions.png}
-\caption{Climate regions by year among emergence timing prediction sites in the Fraser River basin in British Columbia Canada. Points (green) indicate temperature monitoring locations where emergence timing can be estimated. The ring around temperature monitoring locations are made up of climate divergence estimates (points) for each year between 1970 and 2010 colored by climate divergence groups. Four distinct climate divergence groups are estimated, located in the lower Fraser basin (white), the Nicola and Thompson region (turquoise), the central and northwest region (blue) and the west and northwest region (purple). Boundaries in among groups varies from year to year within edge sites. The river network is colored by mean climate group and watershed is colored by mean annual temperature across years.} 
+\caption{Climate regions by year among emergence timing prediction sites in the Fraser River basin in British Columbia Canada. Points (green) indicate temperature monitoring locations where emergence timing can be estimated. The ring around monitoring locations are made up of climate divergence estimates (points) for each year between 1970 and 2010 colored by climate divergence group. Four distinct climate divergence groups are estimated, located in the lower Fraser basin (blue), the Nicola and Thompson region (green), the central and northwest region (red) and the west and northwest region (yellow). Climate group boundaries vary from year to year within edge sites. The river network is colored by mean climate group and the Fraser River watershed is colored by mean annual temperature across years.} 
 \label{fig:climate}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/04_MismatchLOOCV.pdf}
-\caption{**Left** Leave one out cross validation (LOOCV) given the observed overlap between estuary arrival and zooplankton bloom among sites and years in the Fraser River watershed in British Columbia Canada (solid line 1:1). **Right** LOOCV prediction standard error estimate given the observed data.} 
+\caption{(\textbf{Left}) Leave one out cross validation (LOOCV) given the observed overlap between estuary arrival and zooplankton bloom among sites and years in the Fraser River watershed in British Columbia Canada (solid line 1:1). (\textbf{Right}) LOOCV prediction standard error estimate given the observed data.} 
 \label{fig:MisMatchLOOCV}
 \end{figure}
 \begin{figure}[H]
 
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/06_sequence.pdf}
-\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (yellow) and above Hells Gate in the Thompson and Nicola region (purple). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
+\caption{Overlap between pink salmon estuary arrival and zooplankton bloom in the Straight of Georgia from 1968 to 2010. Pink salmon arrival distributions represent populations residing in the lower Fraser River below Hells Gate (blue) and above Hells Gate in the Thompson and Nicola region (green). Zooplankton bloom date range (grey ribbon) is derived from model output in Allen and Wolfe (2013).}
 \label{fig:seq}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/05_mismatch_LOOCV.pdf}
-\caption{Percent overlap between estuary arrival timing of pink salmon and the zooplankton bloom in the Fraser River estuary in the Straight of Georgia in British Columbia Canada. Colored points represent the observed estimates and are colored by the river distance between the natal stream and the estuary. Black points represent prediction estimates given leave one out cross validation given equation 4 in the main text.} 
+\caption{Percent overlap between juvenile pink salmon arrival and the zooplankton bloom, given how much natal stream climates diverge from the estuary. Colored points describe the overlap and climate divergence estimates for each population in each year data were available and are colored by river distance to the estuary. Black points represent prediction estimates given leave one out cross validation given equation 4 in the main text.} 
 \label{fig:MisMatchLOOCV}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/06_CorMismatch.pdf}
-\caption{}
+\caption{Percent overlap between juvenile pink salmon arrival and the zooplankton bloom, given how correlated natal stream climate is with the estuary. Points describe the overlap and climate correlation for each population in each year data were available and are colored by river distance to the estuary. The shape of the points describes the climatic region of the data as described in supplementary figure 3.}
 \label{fig:cor}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/07_DivMismatch.pdf}
-\caption{}
+\caption{Percent overlap between juvenile pink salmon arrival and the zooplankton bloom, given how much natal stream climates diverge from the estuary. Points describe the overlap and climate divergence estimates for each population in each year data were available and are colored by river distance to the estuary. Density distributions describe the spatial relationship of climate divergence in the Fraser River basin.}
 \label{fig:div}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=6.5in]{./99_figures/Aux_Figures/08_PresAbs.pdf}
-\caption{}
+\caption{The presence and absence of pink salmon populations in the Fraser River basin given the percent overlap in estuary arrival of juvenile pink salmon and the zooplankton bloom. The points are colored by their natal stream climate divergence region, (i.e., Sup Figures 3 \& 8) and are jittered both vertically and horizontally for visibility. The dotted grey line describes the mean effect of a binomial generalized linear model surrounded by a light grey standard error estimate.}
 \label{fig:pa}
 \end{figure}
