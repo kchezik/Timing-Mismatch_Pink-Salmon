@@ -181,13 +181,13 @@ ggplot(mismatch, aes(perc, PresAbs, color = as.factor(region))) +
 	geom_hline(yintercept = 0.5, lty = 3, color = "lightgrey") + 
 	geom_vline(xintercept = 19.9, lty = 3, color = "lightgrey") + 
 	labs(x = "Percent Overlap", y = "Pink Salmon Presence",
-			 color = "Climate\nRegion") + 
+			 color = "Climate Region") + 
 	theme_tufte(ticks = T) + 
 	theme(legend.title.align = 0.5, legend.position = c(0.93,0.70), 
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"))
-ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "08_PresAbs.pdf",
+ggsave(path = "./drafts/99_figures/", filename = "06_PresAbs.pdf",
 			 device = "pdf", width = 7.5, height = 5, units = "in")
 
 #Output overlap/climate divergence data to a shapefile.
@@ -195,38 +195,6 @@ sp = mismatch %>% filter(!is.na(diff)) %>% select(geolocid, year, diff, perc, pe
 sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c(1:7)], proj4string = CRS("+init=epsg:4326"))
 sp = spTransform(sp, CRS("+init=epsg:3005"))
 writeOGR(obj = sp, dsn = "./02_SpawnTiming/lsn/sites/", layer = "sites_overlap", driver = "ESRI Shapefile", overwrite_layer = T)
-
-#Look for climatic clumping. Three distinct climatic regions with a transition zone.
-p = ggplot(mismatch, aes(climDiverg, group = as.factor(region))) +
-	geom_density(adjust = 2)
-
-pp = ggplot_build(p)
-dens = data.frame(climDiverg = pp$data[[1]]$x,
-					 density = pp$data[[1]]$y*200,
-					 region = pp$data[[1]]$group)
-dens = dens %>% group_by(region) %>% mutate(dens_sc = scales::rescale(density, c(0,10)))
-
-ggplot() + 
-	geom_ridgeline(data = dens, aes(x = climDiverg, y = rep(0, nrow(dens)), height = dens_sc,
-																	fill = as.factor(region)), color = "white", 
-								 alpha = 0.2, lwd = 0.5, show.legend = T) + 
-	geom_jitter(data = mismatch,
-							aes(climDiverg, perc, color = Rdist/1000), height = 0.3, size = 2.25, alpha = 0.7) +
-	scale_color_viridis(option = "plasma") + 
-	labs(x = "Climate Divergence", y = "Percent Overlap",
-			 color = "River Distance\n(km)", fill = "Climate Region") +
-	scale_fill_manual(values = c("#51bbfe","#8ff7a7","#85143e","#e4ea69"),
-										breaks = as.factor(c(1,2,3,4)),
-										labels = as.factor(c("Lower Fraser","Nicola &\nThompson",
-											 										 "Transition","Upper Fraser"))) + 
-	theme_tufte(ticks = T) + 
-	theme(legend.title.align = 0.5, legend.position = c(0.85,0.80), 
-				legend.box = "horizontal",
-			plot.background = element_rect(fill = "transparent", colour = NA),
-			panel.background = element_rect(fill = "transparent", colour = NA),
-			axis.line = element_line(color="black"))
-ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "07_DivMismatch.pdf",
-			 device = "pdf", width = 7.5, height = 5, units = "in")
 
 #Plot the response variables against eachother. This gives strong evidence that our predictors are measuring match/mismatch...
 # ... because as the predicted arrival time diverges from the observed phytoplankton bloom, ...

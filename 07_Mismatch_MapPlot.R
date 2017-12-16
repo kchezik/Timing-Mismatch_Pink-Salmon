@@ -1,5 +1,5 @@
 library(tidyverse); library(SSN); library(MuMIn); library(attenPlot); library(rgdal)
-library(viridis) #Activate Libraries
+library(viridis); library(ggthemes); library(ggridges) #Activate Libraries
 #Read in the .ssn network data.
 network = importSSN("./02_SpawnTiming/lsn/sites_overlap.ssn", predpts = "BK_2010", o.write = F)
 
@@ -127,6 +127,7 @@ slope = summary(mod)[[2]][[2]][2]
 slopeSE = summary(mod)[[2]][[3]][2]
 
 df = data.frame(
+	geolocid = net$geolocid,
 	perc = net$perc,
 	Rdist = net$upDist,
 	climDiverg = net$climDiverg,
@@ -136,22 +137,48 @@ df = data.frame(
 	lower = boot::inv.logit((int-2*intSE) + slope*net$climDiverg)*100,
 	upper = boot::inv.logit((int+2*intSE) + slope*net$climDiverg)*100)
 
-ggplot(df) +
-	geom_line(aes(climDiverg, overlap_Fit), color = "black", alpha = 0.7) +
-	geom_jitter(aes(climDiverg, perc, color = Rdist/1000), 
+#Add climate region to df.
+df = df %>% mutate(region = if_else(climDiverg<15, 1, 
+																								if_else(climDiverg<24.5 & climDiverg>15, 2,
+																												if_else(climDiverg<28.9 & climDiverg> 24.5, 2.5,3))))
+#Create density plot to gather density data.
+p = ggplot(df, aes(climDiverg, group = as.factor(region))) +
+	geom_density(adjust = 2)
+#Gather density data.
+pp = ggplot_build(p)
+#Create density df.
+dens = data.frame(climDiverg = pp$data[[1]]$x,
+					 density = pp$data[[1]]$y*200,
+					 region = pp$data[[1]]$group)
+#Scale the density data by region.
+dens = dens %>% group_by(region) %>% mutate(dens_sc = scales::rescale(density, c(0,10)))
+#Crewate Match-mismatch plot with mean trend line and climate region density plots.
+ggplot() +
+	geom_ridgeline(data = dens, aes(x = climDiverg, y = rep(0, nrow(dens)), height = dens_sc,
+																	fill = as.factor(region)), color = "white",
+								 alpha = 0.2, lwd = 0.5, show.legend = T) + 
+	geom_line(data = df, aes(climDiverg, overlap_Fit), color = "black", alpha = 0.7) +
+	geom_jitter(data = df, aes(climDiverg, perc, color = Rdist/1000), 
 							height = 0.3, size = 2.25, alpha = 0.7) +
 	#geom_line(aes(climDiverg, lower), color = "black", lty = 2) + 
 	#geom_line(aes(climDiverg, upper), color = "black", lty = 2) + 
 	#geom_line(aes(climDiverg, lowerS), color = "black", lty = 2) + 
 	#geom_line(aes(climDiverg, upperS), color = "black", lty = 2) + 
 	scale_color_viridis(option = "plasma") + 
-	labs(x = "Climate Divergence", y = "Percent Overlap", color = "River\nDistance\n(km)") +
+	labs(x = "Climate Divergence", y = "Percent Overlap",
+			 color = "River Distance\n(km)", fill = "Climate Region") +
+	scale_fill_manual(values = c("#51bbfe","#8ff7a7","#85143e","#e4ea69"),
+										breaks = as.factor(c(1,2,3,4)),
+										labels = as.factor(c("Lower Fraser","Nicola &\nThompson",
+											 										 "Transition","Upper Fraser"))) + 
 	theme_tufte(ticks = T) + 
-	theme(legend.title.align = 0.5, legend.position = c(0.97,0.80), 
+	theme(legend.title.align = 0.5, legend.position = c(0.85,0.80), 
+				legend.box = "horizontal",
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"))
-ggsave(path = "./drafts/", filename = "mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+ggsave(path = "./drafts/99_figures/", filename = "04_mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+
 
 df = net %>% select(pid, climDiverg, perc, upDist) %>% 
 	left_join(., cv.out)
