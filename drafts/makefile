@@ -1,4 +1,4 @@
-all: ms msAux
+all: msAux ms
 
 outline:
 	pandoc -H style.sty -V fontsize=11pt -V geometry:margin=1in ./outline/outline.md -o ./outline/outline.pdf
