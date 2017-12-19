@@ -1,4 +1,4 @@
-library(tidyverse); library(lubridate); library(attenPlot); library(sp); library(rgdal); library(ggridges); library(viridis); library(ggthemes)
+l)ibrary(tidyverse); library(lubridate); library(attenPlot); library(sp); library(rgdal); library(ggridges); library(viridis); library(ggthemes)
 #Get Emergence Probability data.
 emerg = read_rds("Data_04_EmergProbs.rds") %>% ungroup() %>% select(-1)
 
@@ -338,26 +338,25 @@ print(p)
 
 ggsave(filename = "./drafts/99_figures/Aux_Figures/06_sequence.pdf", device = "pdf", width = 8, height = 2, units = "in")
 
-#Smoothed zooplankton bloom alternative.
-p = ggplot() +
-	stat_smooth(data = estuaryP, aes(yearAdj, lowerQ), method = "loess", se = F, span = 0.1, col = "white") +
-	stat_smooth(data = estuaryP, aes(yearAdj, upperQ), method = "loess", se = F, span = 0.1, col = "white")
+#Plot the arrival IQR vs. the bloom date deviation from the mean.
+test = estuary %>% filter(region == "lower" | region == "interior") %>% 
+	group_by(region, geolocid, year) %>% summarise(IQR = IQR(yday(arriveDate), na.rm = T))
+M = round(mean(estuaryP$ModeA),0)
+testP = estuaryP %>% mutate(year = yearAdj-1, estuary = ModeA-M, geolocid = 0) %>% select(region, geolocid, year, estuary) %>% distinct()
+test = testP %>% select(year, estuary) %>% left_join(test, .)
 
-pp = ggplot_build(p)
-estuaryP2 = data.frame(yearAdj = pp$data[[1]]$x,
-					 lowerQ = pp$data[[1]]$y,
-					 upperQ = pp$data[[2]]$y)
-p + geom_ribbon(data = estuaryP2, aes(x = yearAdj, ymin = lowerQ, ymax = upperQ),
-								fill = "grey", alpha = 0.5) +
-	geom_violin(data = lower, aes(x = year+1, y = doy, group = year), 
-							colour = "#ffffff99", fill = "#51bbfe", alpha = 0.7, size = 0.2, width = 0.5) + 
-	geom_violin(data = interior, aes(x = year+1.3, y = doy, group = year), 
-							colour = "#ffffff99", fill = "#8ff7a7", alpha = 0.7, size = 0.2, width = 0.5) + 
-	ylim(40, 190) + xlim(1967.5,2010.6) +
+ggplot(test, aes(abs(estuary), IQR, color = region)) + 
+	geom_smooth(method = "lm", se = F) +
+	geom_jitter() +
+	scale_color_manual(values = c("#8ff7a7", "#51bbfe"),
+										 labels = as.factor(c("Nicola &\nThompson", "Lower Fraser"))) +
 	theme_tufte(tick = T) +
 	theme(legend.title.align = 0.5,
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"),
 			legend.box = "vertical") + 
-	labs(x = "Year", y = "Day of Year")
+	labs(x = "Deviation from Mean Bloom Date", y = "Estuary Arrival IQR",
+			 color = "Climate Region")
+
+ggsave(filename = "./drafts/99_figures/Aux_Figures/08_IQR.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
