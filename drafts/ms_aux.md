@@ -52,3 +52,11 @@
 \caption{Percent overlap between juvenile pink salmon arrival and the zooplankton bloom, given how correlated natal stream climate is with the estuary. Points describe the overlap and climate correlation for each population in each year data were available and are colored by river distance to the estuary. The shape of the points describes the climatic region of the data as described in Figure S3.}
 \label{fig:cor}
 \end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{./99_figures/Aux_Figures/08_IQR.pdf}
+\caption{Changing estuary arrival timing inter-quartile range given the strength of the devation from the mean zooplankton bloom date. The points are colored by climte region above (green) and below (blue) Hells Gate. Lines describe the mean trend line given a simple linear model.}
+\label{fig:IQR}
+\end{figure}
+
