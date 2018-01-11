@@ -6,7 +6,7 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=4.5in]{./99_figures/Aux_Figures/03_SpawnRegions.png}
+\includegraphics[width=5in]{./99_figures/Aux_Figures/03_SpawnRegions.png}
 \caption{Climate regions by year among emergence timing prediction sites in the Fraser River basin in British Columbia Canada. Points (green) indicate temperature monitoring locations where emergence timing can be estimated. The ring around monitoring locations are made up of climate divergence estimates (points) for each year between 1970 and 2010 colored by climate divergence group. Four distinct climate divergence groups are estimated, located in the lower Fraser basin (blue), the Nicola and Thompson region (green), the central and northwest region (red) and the west and northwest region (yellow). Climate group boundaries vary from year to year within edge sites. The river network is colored by mean climate group and the Fraser River watershed is colored by mean annual temperature across years.} 
 \label{fig:climate}
 \end{figure}
