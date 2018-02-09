@@ -1,4 +1,4 @@
-l)ibrary(tidyverse); library(lubridate); library(attenPlot); library(sp); library(rgdal); library(ggridges); library(viridis); library(ggthemes)
+library(tidyverse); library(lubridate); library(attenPlot); library(sp); library(rgdal); library(ggridges); library(viridis); library(ggthemes)
 #Get Emergence Probability data.
 emerg = read_rds("Data_04_EmergProbs.rds") %>% ungroup() %>% select(-1)
 
@@ -163,6 +163,28 @@ mismatch = mismatch %>% mutate(region = if_else(climDiverg<15, 1,
 																								if_else(climDiverg<24.5 & climDiverg>15, 2,
 																												if_else(climDiverg<28.9 & climDiverg> 24.5, 2.5,3))))
 
+#Calculate the average difference in variation and emergence date between region 1 and 2.
+#Add region variable.
+temp = mismatch %>% ungroup() %>% select(geolocid, year, region) %>% 
+	left_join(emerg, ., by = c("geolocid","year")) 
+#Summarize variation (sd) and typical emergence day (mode) by region and year.
+temp2 = temp %>% filter(region %in% c(1,2)) %>% 
+	group_by(region, geolocid, year) %>% 
+	summarize(modeE = getmode(yday(emergDate)),
+						sdE = sd(yday(emergDate))) %>% 
+	group_by(region, year) %>% 
+	summarise(MmodeE = median(modeE, na.rm = T),
+						MsdE = median(sdE, na.rm = T))
+#Difference the most common emergence day between region 1 and 2 in a given year. 
+temp2 %>% select(-MsdE) %>% 
+	spread(key = region, value = MmodeE) %>% 
+	mutate(dE = `1`-`2`) %>% .$dE %>% median(., na.rm = T)
+#Determine the variance ration between region 1 and region 2 in a given year
+temp2 %>% select(-MmodeE) %>% 
+	spread(key = region, value = MsdE) %>% 
+	mutate(qE = `2`/`1`) %>% 
+	.$qE %>% median(.,na.rm = T)
+
 #Add presence absence to overlap location ...
 # indicating if pink salmon populations have been observed in the area.
 PA = read_csv(file = "./02_SpawnTiming/PresenceAbsence.csv")
@@ -233,7 +255,6 @@ ggplot(mismatch, aes(cor, perc, color = Rdist/1000, shape = as.factor(region))) 
 			axis.line = element_line(color="black"))
 ggsave(path = "./drafts/99_figures/Aux_Figures/", filename = "06_CorMismatch.pdf",
 			 device = "pdf", width = 7.5, height = 5, units = "in")
-
 #Y-axis: values are positive when the Pinks enter the estuary after peak bloom.
 #X-axis: values describe increasingly disimilar climates from the estuary.
 #Color: Percent arrival timing overlap with zooplankton bloom.
@@ -288,6 +309,7 @@ ggplot(NULL) +
 				panel.background = element_rect(fill = "transparent", colour = NA))
 	
 ggsave(filename = "./drafts/distributions.pdf", device = "pdf", width = 7.5, height = 6.5, units = "in")
+ggsave(filename = "../../../Presentations/IDEAS/2018/distributions.png", device = "png", width = 7.5, height = 6.5, units = "in") #IDEAS Presentation
 
 
 #Estuary Arrivals/Blooms Over Time.
@@ -322,10 +344,10 @@ interior = estuary %>% filter(region == "interior")
 p = ggplot() + 
 	geom_ribbon(data = estuaryP, aes(year, ymin = lowerQ, ymax = upperQ),
 								fill = "grey", alpha = 0.5) +
-	geom_violin(data = lower, aes(x = year+0.75, y = doy, group = year), 
-							colour = "#ffffff99", fill = "#51bbfe", alpha = 0.7, size = 0.2, width = 0.5) + 
-	geom_violin(data = interior, aes(x = year+1.25, y = doy, group = year), 
-							colour = "#ffffff99", fill = "#8ff7a7", alpha = 0.7, size = 0.2, width = 0.5) + 
+	#geom_violin(data = lower, aes(x = year+0.75, y = doy, group = year), 
+	#						colour = "#ffffff99", fill = "#51bbfe", alpha = 0.7, size = 0.2, width = 0.5) + 
+	#geom_violin(data = interior, aes(x = year+1.25, y = doy, group = year), 
+	#						colour = "#ffffff99", fill = "#8ff7a7", alpha = 0.7, size = 0.2, width = 0.5) + 
 	ylim(40, 190) + xlim(1967.5,2010.6) +
 	theme_tufte(tick = T) +
 	theme(legend.title.align = 0.5,
@@ -336,8 +358,11 @@ p = ggplot() +
 	labs(x = "Year", y = "Day of Year")
 print(p)
 
-ggsave(filename = "./drafts/99_figures/Aux_Figures/06_sequence.pdf", device = "pdf", width = 8, height = 2, units = "in")
+#ggsave(filename = "./drafts/99_figures/Aux_Figures/06_sequence.pdf", device = "pdf", width = 8, height = 2, units = "in")
+ggsave(filename = "../../../Presentations/IDEAS/2018/06_sequence.png", device = "png", width = 8, height = 2, units = "in",
+			 bg = "transparent") #For IDEAS Presentation.
 
+ggsave(filename = "~/sfuvault/Simon_Fraser_University/Presentations/IDEAS/2018/phyto_seq.pdf", device = "pdf", width = 8, height = 2, units = "in")
 #Plot the arrival IQR vs. the bloom date deviation from the mean.
 test = estuary %>% filter(region == "lower" | region == "interior") %>% 
 	group_by(region, geolocid, year) %>% summarise(IQR = IQR(yday(arriveDate), na.rm = T))

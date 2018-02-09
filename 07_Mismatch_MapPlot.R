@@ -152,11 +152,12 @@ dens = data.frame(climDiverg = pp$data[[1]]$x,
 					 region = pp$data[[1]]$group)
 #Scale the density data by region.
 dens = dens %>% group_by(region) %>% mutate(dens_sc = scales::rescale(density, c(0,10)))
-#Crewate Match-mismatch plot with mean trend line and climate region density plots.
+#Create Match-mismatch plot with mean trend line and climate region density plots.
 ggplot() +
 	geom_ridgeline(data = dens, aes(x = climDiverg, y = rep(0, nrow(dens)), height = dens_sc,
 																	fill = as.factor(region)), color = "white",
-								 alpha = 0.2, lwd = 0.5, show.legend = T) + 
+								 #alpha = 0.2, lwd = 0.5, show.legend = T) + 
+								 alpha = 0.5, lwd = 0.5, show.legend = T) + 
 	geom_line(data = df, aes(climDiverg, overlap_Fit), color = "black", alpha = 0.7) +
 	geom_jitter(data = df, aes(climDiverg, perc, color = Rdist/1000), 
 							height = 0.3, size = 2.25, alpha = 0.7) +
@@ -176,8 +177,10 @@ ggplot() +
 				legend.box = "horizontal",
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
-			axis.line = element_line(color="black"))
+			axis.line = element_line(color="black"),
+			axis.title = element_text(size = 14))
 ggsave(path = "./drafts/99_figures/", filename = "04_mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+ggsave(path = "../../../Presentations/IDEAS/2018/", filename = "04_mismatch.png", device = "png", width = 7.5, height = 5, units = "in") #IDEAS presentation.
 
 
 df = net %>% select(pid, climDiverg, perc, upDist) %>% 

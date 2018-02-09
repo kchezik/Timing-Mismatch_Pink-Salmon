@@ -142,4 +142,4 @@ saveRDS(fin, file = "Data_04_EmergProbs.rds")
 
 #Note
 
-Spawn dates were sampled with replacement so some days will be sampled more frequently than others. This will increase the prevalence of values that are more likely to have been the spawn date and down weight emergence days with unlikely spawn dates. I'm not sure if this makes perfect sense given that an sampling without replacement would have still led to days of high likelihood to be more prevalent than days of low likelihood. Could be a big waste of processing time, does it artificially increase our certainty or represent the true level of certainty?
+Spawn dates were sampled with replacement so some days will be sampled more frequently than others. This will increase the prevalence of values that are more likely to have been the spawn date and down weight emergence days with unlikely spawn dates. I'm not sure if this makes perfect sense given that sampling without replacement would have still led to days of high likelihood to be more prevalent than days of low likelihood. Could be a big waste of processing time, does it artificially increase our certainty or represent the true level of certainty?
