@@ -1,6 +1,10 @@
-% Spatial Structuring of Climate Match-Mismatch in a Migratory Fish
-% K. A. Chezik; S. M. Wilson; J. W. Moore
-% January 14, 2018
+% Spatial Structuring of Climate Match-Mismatch
+% ^1,2^Kyle A. Chezik; ^1^Samantha M. Wilson; ^1^Jonathan W. Moore
+% ^1^Earth to Ocean Research Group -- Simon Fraser University 8888 University Dr. Burnaby BC, Canada V5A1S6 -- ^2^ 778.782.9427 -- kchezik@sfu.ca
+
+*Keywords:* Migration-distance, Phenology, Salmon, Global Warming
+
+*Paper Type:* Primary Research
 
 \linenumbers
 
