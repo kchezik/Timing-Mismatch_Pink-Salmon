@@ -1,6 +1,5 @@
 % Spatial Structuring of Climate Match-Mismatch in a Migratory Fish | Supplementary
 % K. A. Chezik; S. M. Wilson; J. W. Moore
-% December 03, 2017
 
 # Supplementary Figures
 
