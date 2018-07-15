@@ -94,6 +94,8 @@ createDistMat(network, predpts = "BK_1970", o.write = F, amongpreds = F)
 
 #Model the percent overlap. Tested including correlation in the model but is outcompeted by a climate divergence only model.
 mod <- glmssn(logitPerc ~ climDiverg, ssn.object = network, family = "Gaussian", CorModels = c("year","Exponential.tailup"), addfunccol = "afvArea")
+int <- glmssn(logitPerc ~ 1, ssn.object = network, family = "Gaussian", CorModels = c("year","Exponential.tailup"), addfunccol = "afvArea")
+AIC(int)-AIC(mod)
 
 #Look at residuals.
 mod.resid = residuals(mod)
@@ -110,7 +112,38 @@ ggplot(., aes(`_fit_`,`logitPerc`, color = `_CooksD_`)) +
 												high="#FF0000", space ="Lab") 
 
 #Cross validation.
-cv.out = CrossValidationSSN(mod)
+cv.out = CrossValidationSSN(mod) %>% mutate(Model = "Intercept", Observed = boot::inv.logit(mod$sampinfo$z))
+int.cv.out = CrossValidationSSN(int) %>% mutate(Model = "Climate", Observed = boot::inv.logit(mod$sampinfo$z))
+
+int_error = abs(boot::inv.logit(mod$sampinfo$z)-boot::inv.logit(int.cv.out[,"cv.pred"]))
+clim_error = abs(boot::inv.logit(mod$sampinfo$z)-boot::inv.logit(cv.out[,"cv.pred"]))
+
+error = bind_rows(cv.out, int.cv.out) %>% arrange() %>%  #arrange(desc(Model), cv.pred) %>%
+	mutate(pred = boot::inv.logit(cv.pred), 
+				 upper = boot::inv.logit(cv.pred + cv.se),
+				 lower = boot::inv.logit(cv.pred - cv.se),
+				 diff = abs(pred-Observed))
+error$pid = factor(error$pid, ordered = T, levels = unique(error$pid))
+
+error = error %>% group_by(pid) %>% mutate(best = if_else(diff == min(diff), 1,0))
+
+ggplot(data = error, aes(as.numeric(pid), pred, color = Model)) +
+	#geom_ribbon(aes(ymax = upper, ymin = lower, fill = Model, color = NULL), alpha = 0.3) +
+	geom_point(aes(as.numeric(pid), Observed), color = "grey", alpha = .3, pch = 1) +
+	geom_point(data = filter(error, best == 1), alpha = .3, shape = 16) +
+	geom_errorbar(data = filter(error, best == 1), 
+								aes(as.numeric(pid), ymin = pred, ymax = Observed), alpha = .3) +
+	geom_point(data = filter(error, best == 0), shape = 4) +
+	coord_flip() +
+	labs(y = "Percent Overlap") +
+	ggthemes::theme_tufte(ticks = F) +
+	theme(axis.text.y = element_blank(),
+				axis.title.y = element_blank(),
+				legend.direction = "horizontal",
+				legend.position = "top") +
+	guides(alpha = F)
+
+
 par(mfrow = c(1, 2))
 plot(boot::inv.logit(mod$sampinfo$z),
 		 boot::inv.logit(cv.out[, "cv.pred"]), pch = 19,

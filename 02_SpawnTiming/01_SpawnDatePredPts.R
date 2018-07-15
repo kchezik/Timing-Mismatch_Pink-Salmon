@@ -17,7 +17,7 @@ temp %>% mutate(year = year(ymd(date))) %>% select(geolocid,year) %>% distinct()
 	saveRDS(., file = "./02_SpawnTiming/Spawn\ Site-Climate\ Data/predsYears.rds")
 #Write csv of locality data for inspection.
 write.csv(x = preds, file = "./02_SpawnTiming/Spawn\ Site-Climate\ Data/preds.csv", row.names = F)
-#Insepcet 'preds.csv' in QGIS to make sure data points on the stream network and not out of place ...
+#Inspect 'preds.csv' in QGIS to make sure data points on the stream network and not out of place ...
 # given the desicriptions in the store.mdb file.
 
 

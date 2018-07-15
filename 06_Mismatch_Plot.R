@@ -385,3 +385,8 @@ ggplot(test, aes(abs(estuary), IQR, color = region)) +
 			 color = "Climate Region")
 
 ggsave(filename = "./drafts/99_figures/Aux_Figures/08_IQR.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+
+ggplot(mismatch, aes(Rdist/1000, climDiverg)) + 
+	geom_jitter(width = 40, height = 1, color = "darkgrey", size = 2) +
+	labs(x = "River Distance (km)", y = "Climate Divergence Index") + 
+	theme_light(base_size = 15)

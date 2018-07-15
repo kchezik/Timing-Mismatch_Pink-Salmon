@@ -25,5 +25,6 @@ test = test %>% mutate(tenP = round(Reduce("+", perc)/length(perc)*100,0))
 
 
 #Must run much of 06_Mismatch_Plot.R to get this statistic.
-mismatch %>% group_by(region) %>% summarise(max = max(perc, na.rm = T),
-																						lower = sum(perc<quantile(mismatch$perc, 0.25, na.rm = T), na.rm = T)/length(perc))
+mismatch %>% group_by(region) %>% 
+	summarise(max = max(perc, na.rm = T),
+						lower = sum(perc<quantile(mismatch$perc, 0.25, na.rm = T), na.rm = T)/length(perc))
