@@ -199,7 +199,7 @@ ggplot() +
 	#geom_line(aes(climDiverg, lowerS), color = "black", lty = 2) + 
 	#geom_line(aes(climDiverg, upperS), color = "black", lty = 2) + 
 	scale_color_viridis(option = "plasma") + 
-	labs(x = "Climate Divergence", y = "Percent Overlap",
+	labs(x = "Climate Dissimilarity", y = "Phenological Match (%)",
 			 color = "River Distance\n(km)", fill = "Climate Region") +
 	scale_fill_manual(values = c("#51bbfe","#8ff7a7","#85143e","#e4ea69"),
 										breaks = as.factor(c(1,2,3,4)),
@@ -212,7 +212,7 @@ ggplot() +
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"),
 			axis.title = element_text(size = 14))
-ggsave(path = "./drafts/99_figures/", filename = "04_mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
+ggsave(path = "./drafts/99_figures/", filename = "05_mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
 ggsave(path = "../../../Presentations/IDEAS/2018/", filename = "04_mismatch.png", device = "png", width = 7.5, height = 5, units = "in") #IDEAS presentation.
 
 
@@ -225,7 +225,7 @@ ggplot(df) +
 	geom_jitter(aes(climDiverg, perc, color = upDist/1000), 
 							height = 0.3, size = 2.25, alpha = 0.7) +
 	scale_color_viridis(option = "plasma") + 
-	labs(x = "Climate Divergence", y = "Percent Overlap", color = "River\nDistance\n(km)") +
+	labs(x = "Climate Dissimilarity", y = "Phenological Match (%)", color = "River\nDistance\n(km)") +
 	theme_tufte(ticks = T) + 
 	theme(legend.title.align = 0.5, legend.position = c(0.97,0.80), 
 			plot.background = element_rect(fill = "transparent", colour = NA),

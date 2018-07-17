@@ -202,7 +202,7 @@ ggplot(mismatch, aes(perc, PresAbs, color = as.factor(region))) +
 							se = T, color = "darkgrey", lty = 2, lwd = 0.5, fill = "lightgrey") + 
 	geom_hline(yintercept = 0.5, lty = 3, color = "lightgrey") + 
 	geom_vline(xintercept = 19.9, lty = 3, color = "lightgrey") + 
-	labs(x = "Percent Overlap", y = "Pink Salmon Presence",
+	labs(x = "Phenological Match (%)", y = "Pink Salmon Presence/Absence",
 			 color = "Climate Region") + 
 	theme_tufte(ticks = T) + 
 	theme(legend.title.align = 0.5, legend.position = c(0.93,0.70), 
@@ -212,7 +212,7 @@ ggplot(mismatch, aes(perc, PresAbs, color = as.factor(region))) +
 ggsave(path = "./drafts/99_figures/", filename = "06_PresAbs.pdf",
 			 device = "pdf", width = 7.5, height = 5, units = "in")
 
-#Output overlap/climate divergence data to a shapefile.
+	 (#Output overlap/climate divergence data to a shapefile.
 sp = mismatch %>% filter(!is.na(diff)) %>% select(geolocid, year, diff, perc, perc_median, climDiverg, enso, pdo, latitude, longitude) %>% data.frame(.)
 sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c(1:7)], proj4string = CRS("+init=epsg:4326"))
 sp = spTransform(sp, CRS("+init=epsg:3005"))
@@ -300,15 +300,15 @@ ggplot(NULL) +
 					 panel_scaling = F) + 
 	theme_tufte() +
 	xlim(-80, 300) +
-	labs(x = "Day of Year", y = "Climate Divergence", fill = "Mismatch \n (days)") + 
+	labs(x = "Day of Year", y = "Climate Dissimilarity", fill = "Pheno-Mis\n(days)") + 
 	facet_wrap(~region, scales = "free_y", nrow = 1, ncol = 4) + 
 	scale_fill_viridis() +
 	theme(strip.background = element_blank(),	strip.text.x = element_blank(),
-				legend.title.align = 0.5, 
 				plot.background = element_rect(fill = "transparent",colour = NA),
-				panel.background = element_rect(fill = "transparent", colour = NA))
+				panel.background = element_rect(fill = "transparent", colour = NA),
+				legend.title.align = .5)
 	
-ggsave(filename = "./drafts/distributions.pdf", device = "pdf", width = 7.5, height = 6.5, units = "in")
+ggsave(filename = "./drafts/99_figures/04_distributions.pdf", device = "pdf", width = 7.5, height = 6.5, units = "in")
 ggsave(filename = "../../../Presentations/IDEAS/2018/distributions.png", device = "png", width = 7.5, height = 6.5, units = "in") #IDEAS Presentation
 
 
