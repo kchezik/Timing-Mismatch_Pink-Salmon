@@ -212,7 +212,7 @@ ggplot(mismatch, aes(perc, PresAbs, color = as.factor(region))) +
 ggsave(path = "./drafts/99_figures/", filename = "06_PresAbs.pdf",
 			 device = "pdf", width = 7.5, height = 5, units = "in")
 
-	 (#Output overlap/climate divergence data to a shapefile.
+#Output overlap/climate divergence data to a shapefile.
 sp = mismatch %>% filter(!is.na(diff)) %>% select(geolocid, year, diff, perc, perc_median, climDiverg, enso, pdo, latitude, longitude) %>% data.frame(.)
 sp = SpatialPointsDataFrame(coords = sp[,c("longitude","latitude")], data = sp[,c(1:7)], proj4string = CRS("+init=epsg:4326"))
 sp = spTransform(sp, CRS("+init=epsg:3005"))
@@ -289,6 +289,48 @@ set.seed(123)
 subPhyto = phyto %>% group_by(Year) %>% do({
 	data.frame(EDOY = round(rnorm(1000, mean = (unique(.$YearDay+14)), sd = 5),0))
 }) %>% ungroup() %>% sample_n(size = 100)
+
+#Digital Abstract Plot
+# Year = 1979, sites = 55, 157, 1126
+temp = df.test %>% filter(geolocid %in% c(55, 157, 1126), year == 1979)
+temp_phyto = data.frame(EDOY = rnorm(1000, 94, 5))
+
+#Create density plot to gather density data.
+p1 = ggplot(temp_phyto, aes(EDOY)) + geom_density(adjust = 2)
+p2 = ggplot(temp, aes(EDOY, group = region)) + geom_density(adjust = 2)
+#Gather density data.
+pp1 = ggplot_build(p1)
+pp2 = ggplot_build(p2)
+#Create density df.
+dens1 = data.frame(EDOY = pp1$data[[1]]$x,
+									density = pp1$data[[1]]$y*.2)
+dens2 = data.frame(EDOY = pp2$data[[1]]$x,
+									density = pp2$data[[1]]$y,
+									region = pp2$data[[1]]$group)
+
+
+ggplot() + 
+	geom_ridgeline(data = dens1, aes(x = ymd(19800101) +EDOY, y = rep(0, nrow(dens1)), height = density), 
+										color = "white",
+										lwd = 0.5,
+										scale = 2, show.legend = F) +
+	geom_ridgeline(data = dens2, aes(x = ymd(19800101) +EDOY, y = rep(0, nrow(dens2)), 
+																	height = density, fill = as.factor(region)), 
+										alpha = .3,
+										color = "white",
+										lwd = 0.5,
+										scale = 2, show.legend = T) +
+	scale_fill_manual(values = c("#51bbfe","#8ff7a7","#e4ea69"),
+										breaks = as.factor(c(1,2,3)),
+										labels = as.factor(c("Lower Fraser","Nicola &\nThompson","Upper Fraser"))) +
+	ggthemes::theme_tufte() +
+	theme(legend.direction = "horizontal", legend.position = "top",
+				legend.title = element_blank(),
+				axis.text.y = element_blank(), 
+				axis.ticks.y = element_blank(),
+				axis.title = element_blank()) +
+	guides(colour = guide_colourbar(title.position="top"))
+ggsave(filename = "./drafts/99_figures/08_abstract.svg", device = "svg", width = 6.5, height = 2.5, units = "in", dpi = 300)
 
 ggplot(NULL) + 
 	geom_vline(data = subPhyto, aes(xintercept = EDOY), color = "#BDBDBD", alpha = 0.2, size = 1) + 

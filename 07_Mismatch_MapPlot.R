@@ -160,6 +160,7 @@ slope = summary(mod)[[2]][[2]][2]
 slopeSE = summary(mod)[[2]][[3]][2]
 
 df = data.frame(
+	year = net$year,
 	geolocid = net$geolocid,
 	perc = net$perc,
 	Rdist = net$upDist,
@@ -190,10 +191,12 @@ ggplot() +
 	geom_ridgeline(data = dens, aes(x = climDiverg, y = rep(0, nrow(dens)), height = dens_sc,
 																	fill = as.factor(region)), color = "white",
 								 #alpha = 0.2, lwd = 0.5, show.legend = T) + 
-								 alpha = 0.5, lwd = 0.5, show.legend = T) + 
+								 alpha = 0.5, lwd = 0.5, show.legend = F) + 
 	geom_line(data = df, aes(climDiverg, overlap_Fit), color = "black", alpha = 0.7) +
 	geom_jitter(data = df, aes(climDiverg, perc, color = Rdist/1000), 
 							height = 0.3, size = 2.25, alpha = 0.7) +
+	#geom_point(data = df %>% filter(geolocid %in% c(55,157,1126), year == 1979),
+	#					 aes(climDiverg, perc), size = 5, shape = 1, color = c("#51bbfe","#e4ea69","#8ff7a7"), stroke = 2) +
 	#geom_line(aes(climDiverg, lower), color = "black", lty = 2) + 
 	#geom_line(aes(climDiverg, upper), color = "black", lty = 2) + 
 	#geom_line(aes(climDiverg, lowerS), color = "black", lty = 2) + 
@@ -206,12 +209,13 @@ ggplot() +
 										labels = as.factor(c("Lower Fraser","Nicola &\nThompson",
 											 										 "Transition","Upper Fraser"))) + 
 	theme_tufte(ticks = T) + 
-	theme(legend.title.align = 0.5, legend.position = c(0.85,0.80), 
+	theme(legend.title.align = 0.5, legend.position = c(0.93,0.80), #legend.position = c(0.85,0.80), 
 				legend.box = "horizontal",
 			plot.background = element_rect(fill = "transparent", colour = NA),
 			panel.background = element_rect(fill = "transparent", colour = NA),
 			axis.line = element_line(color="black"),
 			axis.title = element_text(size = 14))
+#ggsave(filename = "./drafts/99_figures/09_abstract.svg", device = "svg", width = 8, height = 4.5, units = "in", dpi = 300)
 ggsave(path = "./drafts/99_figures/", filename = "05_mismatch.pdf", device = "pdf", width = 7.5, height = 5, units = "in")
 ggsave(path = "../../../Presentations/IDEAS/2018/", filename = "04_mismatch.png", device = "png", width = 7.5, height = 5, units = "in") #IDEAS presentation.
 
