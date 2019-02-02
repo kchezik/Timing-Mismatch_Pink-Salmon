@@ -103,7 +103,7 @@ where $\mathrm{E}_{i}$ represents the number of days to emergence at each observ
 \end{equation}
 \end{linenomath*}
 
-where we allowed for the variance in our error ($\eta_{i}$) to increase with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameter. This model was fit using RStan 2.16.2 [@Stan:2017] in a Bayesian framework using Hamiltonian Monte Carlo (HMC) sampling. We allowed four chains to burn in 4,000 iterations before sampling every third iteration 1,334 times, resulting in well mixed chains consistent with convergence and autocorrelation plots suggesting independance among samples. We used weakly informative normally distributed priors centered around zero with standard deviations of 1, 0.5 and 1 for $b$, $m$ and $\updelta$ respectively.
+where we allowed for the variance in our error ($\eta_{i}$) to increase with increasing $\mathrm{CDD}_{T_{0}}$ as defined by the estimated $\updelta$ parameter. This model was fit using RStan 2.16.2 [@Stan:2017] in a Bayesian framework using Hamiltonian Monte Carlo (HMC) sampling. We allowed four chains to burn in 4,000 iterations before sampling every third iteration 1,334 times, resulting in well mixed chains consistent with convergence and autocorrelation plots suggesting independence among samples. We used weakly informative normally distributed priors centered around zero with standard deviations of 1, 0.5 and 1 for $b$, $m$ and $\updelta$ respectively.
 
 *Emergence & arrival timing estimation*
 

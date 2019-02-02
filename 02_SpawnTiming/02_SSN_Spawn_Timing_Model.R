@@ -1,6 +1,6 @@
 library(tidyverse); library(SSN); library(MuMIn) #Activate Libraries
 #Read in the .ssn network data.
-network = importSSN("./02_SpawnTiming/lsn/sites_obs.ssn", predpts = "preds", o.write = F) 
+network = importSSN(".//02_SpawnTiming/lsn/sites_obs.ssn", predpts = "preds", o.write = F) 
 #Change to factorized variables and log transform precipitation in the observed dataset.
 net <- getSSNdata.frame(network)
 names(net)[c(6,7)] = c("end","year")
