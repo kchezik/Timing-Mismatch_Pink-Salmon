@@ -1,6 +1,7 @@
 library(tidyverse); library(SSN); library(MuMIn) #Activate Libraries
 #Read in the .ssn network data.
-network = importSSN(".//02_SpawnTiming/lsn/sites_obs.ssn", predpts = "preds", o.write = F) 
+network = importSSN("~/sfuvault/Timing-Mismatch_Pink-Salmon/02_SpawnTiming/lsn/sites_obs.ssn",
+										predpts = "preds", o.write = F) 
 #Change to factorized variables and log transform precipitation in the observed dataset.
 net <- getSSNdata.frame(network)
 names(net)[c(6,7)] = c("end","year")
@@ -168,20 +169,20 @@ hist(mod.resid)
 #Here we seem to have occassionally datapoints drifting 40+ days away from the mean but those cases are rare. Residuals look normally distributed.
 
 net = getSSNdata.frame(mod.resid)
-ggplot(net, aes(`_fit_`,`peak`, color = `_CooksD_`)) +
+ggplot(net, aes(`peak`,`_fit_`, color = `_CooksD_`)) +
 	geom_point() + 
 	geom_abline(intercept = 0, slope = 1) +
 	scale_color_gradient2(name = expression(frac("CooksD")), midpoint=0.05, low="#67A9CF", mid="#F2F2F2",
 												high="#FF0000", space ="Lab") 
 
-ggplot(net, aes(`_fit_`,`peak`, color = `_leverage_`)) +
+ggplot(net, aes(`peak`,`_fit_`, color = `_leverage_`)) +
 	geom_point() + 
 	geom_abline(intercept = 0, slope = 1) +
 	scale_color_gradient2(name = expression(frac("Leverage")), midpoint=2.5, low="#67A9CF", mid="#F2F2F2",
 												high="#FF0000", space ="Lab") 
 
 ggplot(net, aes(`_fit_`, `_resid.stand_`, color = `_leverage_`)) +
-	geom_point() + 
+	geom_point() +
 	geom_smooth(method = "lm", se = F) +
 	scale_color_gradient2(name = expression(frac("Leverage")), midpoint=2.5, low="#67A9CF", mid="#F2F2F2",
 												high="#FF0000", space ="Lab") 

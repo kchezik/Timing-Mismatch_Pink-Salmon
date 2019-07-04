@@ -650,31 +650,25 @@ final$Treatment = as.factor(final$Treatment)
 saveRDS(final, file = "Data_03_Emergence.rds")
 
 
-library(nlme); library(rstan); library(tidyverse)
+library(rstan); library(tidyverse)
 #Set Up MultiCore Processing for Stan.
-rstan_options(auto_write = TRUE)
-options(mc.cores = 4)
+options(mc.cores = parallel::detectCores(), auto_write = TRUE)
 
-dat = readRDS("Data_03_Emergence.rds")
+#Load gathered emergence data.
+dat = readRDS("Data_03_Emergence.rds") %>% 
+	group_by(Treatment,Location,Source) %>% 
+	summarize(Degree_Days = mean(Degree.Days),
+						Days_to_Emergence = mean(Days.to.Emergence))
 
-simple = dat %>% group_by(Treatment,Location,Source) %>% 
-	summarize(Degree.Days = mean(Degree.Days), Days.to.Emergence = mean(Days.to.Emergence)) %>% 
-	ungroup()
-simple = simple %>% mutate(DD_center = Degree.Days-mean(Degree.Days), 
-													 logitDOY = psych::logit(simple$Days.to.Emergence/365))
+# Compile Model.
+compile = stan_model("./03_Emergence_Model/03b_EmergenceDDModel.stan")
 
-simple = dat %>% select(Location, Treatment, Source, Northing, Easting) %>% distinct() %>% left_join(simple, ., by = c("Location","Treatment","Source"))
+mod = sampling(compile, 
+							 data = list(N = nrow(dat),
+							 						x = dat$Degree_Days,
+							 						y = dat$Days_to_Emergence),
+							 iter = 2000, chains = 4)
 
-mod = gls(model = logitDOY~DD_center, data = simple, weights = varExp(form = ~DD_center))
+shinystan::launch_shinystan(mod)
 
-dat.list = list(N = nrow(simple),
-		 x = simple$DD_center,
-		 y = simple$logitDOY)
-fit = stan(file = "./03_Emergence_Model/03b_EmergenceDDModel.stan", data = dat.list,
-					 iter = 8000, chains = 4, warmup = 4000, thin = 3)
-
-save(fit, file = "stanMod.RData")
-print(fit, digits = 4)
-summary(mod)
-stan_dens(fit)
-traceplot(fit)
+write_rds(mod, path = "~/sfuvault/Timing-Mismatch_Pink-Salmon/03_Emergence_Model/03b_EmergenceDDModel.rds")
