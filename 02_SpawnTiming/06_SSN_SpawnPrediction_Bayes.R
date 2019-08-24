@@ -49,6 +49,11 @@ df = df %>% arrange(Obs_Preds, year) %>%
   mutate(geolocid = factor(as.character(geolocid), levels = as.character(unique(geolocid))),
          geolocid_no = as.numeric(geolocid))
 
+scales = data.frame(row.names = c("F_tave","W_tmin","F_ppt","el","upDist"),
+           mean = c(mean(df$F_tave),mean(df$W_tmin),mean(log(df$F_ppt)),
+                    mean(df$elevation),mean(log(df$upDist))),
+           sd = c(sd(df$F_tave),sd(df$W_tmin),sd(log(df$F_ppt)),sd(df$elevation),sd(log(df$upDist))))
+
 #Function to center and scale data.
 sc_func = function(x){
   (x-mean(x))/sd(x)

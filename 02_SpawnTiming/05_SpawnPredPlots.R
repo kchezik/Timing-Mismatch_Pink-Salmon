@@ -1,8 +1,8 @@
 library(tidyverse); library(SSN); library(RColorBrewer); library(rgdal) #Activate Libraries
-#Read in newtork and prediction points.
+#Read in network and prediction points.
 network = importSSN(filepath = "./02_SpawnTiming/lsn/sites_sims.ssn", predpts = "preds")
 #networkObs = importSSN(filepath = "./02_SpawnTiming/lsn/sites_obs.ssn")
-network = importPredpts(target = network, predpts = "BK_2010",obj.type = "ssn")
+network = importPredpts(target = network, predpts = "BK_2010", obj.type = "ssn")
 network = importPredpts(target = network, predpts = "BK_1970", obj.type = "ssn")
 #Create distance matrix for observed and prediction points.
 #createDistMat(ssn = network, predpts = "preds", o.write = T, amongpreds = T)
@@ -14,7 +14,7 @@ mod = read_rds(path = "./02_SpawnTiming/Model_Results/sim_mod.rds")
 mod$ssn.object@path = "/Users/kylechezik/sfuvault/Simon_Fraser_University/PhD_Research/Projects/Timing-Mismatch_Pink-Salmon/02_SpawnTiming/lsn/sites_sims.ssn" # Change the path of the model from LabPC to local.
 
 #Change to factorized variables and log transform precipitation in the prediction dataset.
-pred_net <- getSSNdata.frame(mod, Name = "BK_1970")
+pred_net = getSSNdata.frame(mod, Name = "BK_1970")
 names(pred_net)[c(1,5)] <- c("id","year")
 pred_net[,"year"] <- as.factor(pred_net[,"year"])
 pred_net[,"geolocid"] <- factor(pred_net[,"geolocid"])
