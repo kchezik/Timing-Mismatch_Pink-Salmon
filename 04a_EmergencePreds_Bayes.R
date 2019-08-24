@@ -1,4 +1,4 @@
-library(tidyverse)
+library(tidyverse); library(lubridate)
 
 #### Data ####
 
@@ -39,7 +39,8 @@ for(i in unique(spawn_dat$geolocid)){
 			arrange(date) %>% mutate(CDD = cumsum(approx),
 															 C_Days = as.numeric(date-j),
 															 consec = c(NA,diff(C_Days))) %>% 
-			filter(C_Days<366) #Only consider days within the coming year.
+			filter(C_Days<366) %>%  #Only consider days within the coming year.
+			mutate(spawn_year = lubridate::year(.$date[1]))
 
 		if(nrow(therm_tmp)==0) next 				# Skip if no temperature data available
 		if(sum(therm_tmp$date==j)==0) next  # Skip if the spawn date is not found in the temperature data
@@ -49,9 +50,11 @@ for(i in unique(spawn_dat$geolocid)){
 		
 		# Weight the emergence probabilities by the spawn date probabilties
 		prob = spawn_geo[spawn_geo$date==j,"prob"][[1]]
+		#yr = spawn_geo[spawn_geo$date==j,"year"][[1]]
 		# Save the summed densities by day.
 		hold[[as.character(i)]][[ctr]] = therm_tmp %>% group_by(date) %>%
-			summarise(density = sum(prob*emerg_pdf(emerg_mod,CDD,C_Days)))
+			summarise(density = sum(prob*emerg_pdf(emerg_mod,CDD,C_Days)),
+								spawn_year = lubridate::year(.$date[1]))
 		ctr=ctr+1 # Increase spawn date counter
 		
 		# Progress bar counter update
@@ -60,26 +63,13 @@ for(i in unique(spawn_dat$geolocid)){
 	}
 	# Collapse the list into a single dataframe for the site and save.
 	full[[as.character(i)]] = hold[[as.character(i)]] %>% 
-		reduce(full_join,by="date") %>% 
-		mutate(density = rowSums(.[-1], na.rm = T),
-					 geolocid = i) %>% 
-		select(date,density,geolocid)
+		reduce(bind_rows) %>% 
+		group_by(spawn_year, date) %>% 
+		summarise(density = sum(density,na.rm = T)) %>% 
+		mutate(geolocid = i)
 }
 close(pb)
 
-#Plot
-ggplot(full$`36`, aes(date, density)) + geom_point()
-
 #Save
-fin = full %>% reduce(bind_rows)
+fin = full %>% reduce(bind_rows) 
 write_rds(fin, path = "~/sfuvault/Timing-Mismatch_Pink-Salmon/Data_04_EmergProbs_Bayes.rds")
-
-fin = read_rds("~/sfuvault/Timing-Mismatch_Pink-Salmon/Data_04_EmergProbs_Bayes.rds")
-fin = fin %>% mutate(year = lubridate::year(date),
-										 doy = lubridate::yday(date+100))
-
-ggplot(fin, aes(doy, density, color = factor(year))) + 
-	geom_line() + 
-	facet_wrap(~geolocid) +
-	ggthemes::theme_tufte() +
-	theme(legend.position = "none")
