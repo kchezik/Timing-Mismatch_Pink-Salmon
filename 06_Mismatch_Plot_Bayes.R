@@ -151,15 +151,8 @@ network = subsetSSN(ssn = network, filename = "/Users/kylechezik/sfuvault/Timing
 ### Continue ####
 #################
 
+#Read in network
 network = importSSN("/Users/kylechezik/sfuvault/Timing-Mismatch_Pink-Salmon/02_SpawnTiming/lsn/sites_overlap_bayes.ssn")
-
-#Read in other prediction points.
-network = importPredpts(network, "BK_2010", obj.type = "ssn")
-network = importPredpts(network, "BK_1970", obj.type = "ssn")
-
-#Create distance matrix.
-createDistMat(network, predpts = "BK_2010", o.write = F, amongpreds = F)
-createDistMat(network, predpts = "BK_1970", o.write = F, amongpreds = F)
 
 #Update 
 df_obs = getSSNdata.frame(network) %>% rename("year" = "year_") %>% 

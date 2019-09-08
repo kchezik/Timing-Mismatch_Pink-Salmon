@@ -28,7 +28,7 @@ generated quantities {
   
   // Set initial values to 0
   for(i in 1:N) mu_doy[i] = 0;
-  // Calculat the mean DOY across all estimates.
+  // Calculate the mean DOY acrossall estimates.
   for(i in 1:N_smpl){
     for(j in 1:N){
       // Mean
